@@ -877,52 +877,32 @@ async function pushLive() {
 
 // ─── BAKE SETTINGS INTO HTML ──────────────────────────────────────────────
 function bake(html) {
-    try {
-        // EmailJS
-        var ej = lsGet('emailjs');
-        if (!ej || !ej.pub) ej = DEF.emailjs;
-        html = html.replace("'-T4mq74FDF0mOq7jK'", "'" + ej.pub + "'");
-        html = html.replace("'service_xne0fnb'",    "'" + ej.svc + "'");
-        html = html.replace("'template_zy03sxs'",   "'" + ej.tpl + "'");
-    } catch(e) { console.warn('bake emailjs error:', e); }
+    // EmailJS
+    var ej = lsGet('emailjs') || DEF.emailjs;
+    if (ej.pub) html = html.replace(/EMAILJS_PUBLIC_KEY\s*=\s*'[^']*'/, "EMAILJS_PUBLIC_KEY  = '" + ej.pub + "'");
+    if (ej.svc) html = html.replace(/EMAILJS_SERVICE_ID\s*=\s*'[^']*'/, "EMAILJS_SERVICE_ID  = '" + ej.svc + "'");
+    if (ej.tpl) html = html.replace(/EMAILJS_TEMPLATE_ID\s*=\s*'[^']*'/, "EMAILJS_TEMPLATE_ID = '" + ej.tpl + "'");
 
-    try {
-        // Behold Feed ID
-        var beholdId = lsGet('behold_id') || 'vxRtAawIFxINH0EnSqBo';
-        html = html.replace("'vxRtAawIFxINH0EnSqBo'", "'" + beholdId + "'");
-    } catch(e) { console.warn('bake behold error:', e); }
+    // Behold Feed ID
+    var beholdId = lsGet('behold_id') || DEF.behold;
+    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, "const BEHOLD_FEED_ID = '" + beholdId + "'");
 
-    try {
-        // Instagram toggle
-        var useIG = lsGet('use_ig');
-        if (useIG === null || useIG === undefined) useIG = true;
-        var tag = '<' + 'script>localStorage.setItem("weldel_use_instagram","' + useIG + '");</' + 'script>';
-        if (html.indexOf('weldel_use_instagram') !== -1) {
-            // Replace existing tag
-            var start = html.indexOf('<script>localStorage.setItem("weldel_use_instagram"');
-            if (start !== -1) {
-                var end = html.indexOf('</' + 'script>', start) + 9;
-                html = html.slice(0, start) + tag + html.slice(end);
-            }
-        } else {
-            html = html.replace('</head>', tag + '</head>');
-        }
-    } catch(e) { console.warn('bake toggle error:', e); }
+    // Instagram toggle — inject as inline script in <head>
+    var useIG = lsGet('use_ig');
+    if (useIG === null) useIG = true;
+    var inlineTag = '<' + 'script' + '>localStorage.setItem("weldel_use_instagram","' + useIG + '");<' + '/script' + '>';
+    if (html.indexOf('weldel_use_instagram') !== -1) {
+        html = html.replace(/<script>localStorage\.setItem\("weldel_use_instagram"[^<]*<\/script>/, inlineTag);
+    } else {
+        html = html.replace('</head>', inlineTag + '\n</head>');
+    }
 
-    try {
-        // Fallback slides
-        var sl = lsGet('slides') || DEF.slides;
-        if (!Array.isArray(sl) || !sl.length) sl = DEF.slides;
-        var slJS = 'buildCarousel([\n' + sl.map(function(s) {
-            return '        {src:' + JSON.stringify(s.src || '') + ',hashtag:' + JSON.stringify(s.hashtag || '') + '}';
-        }).join(',\n') + '\n    ]);';
-        // Find and replace buildCarousel([...]);
-        var bcStart = html.indexOf('buildCarousel([');
-        if (bcStart !== -1) {
-            var bcEnd = html.indexOf(']);', bcStart) + 2;
-            html = html.slice(0, bcStart) + slJS + html.slice(bcEnd);
-        }
-    } catch(e) { console.warn('bake slides error:', e); }
+    // Fallback slides
+    var sl = getVal('slides');
+    var slJS = 'buildCarousel([\n' + sl.map(function(s) {
+        return '        {src:' + JSON.stringify(s.src) + ',hashtag:' + JSON.stringify(s.hashtag||'') + '}';
+    }).join(',\n') + '\n    ]);';
+    html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slJS);
 
     return html;
 }
