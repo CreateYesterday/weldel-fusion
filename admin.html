@@ -822,15 +822,16 @@ function bakeDataIntoHTML(html) {
     const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
     // Always bake the latest Behold Feed ID
     html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
-    // Bake the toggle value so the site knows which mode to use
-    // The site reads localStorage('weldel_use_instagram') — we set it via an inline script
-    const toggleScript = `<script>localStorage.setItem('weldel_use_instagram','${useIG}');</script>`;
-    // Replace existing toggle script if present, otherwise inject before </head>
-    if (html.includes("localStorage.setItem('weldel_use_instagram'")) ) {
-        html = html.replace(/<script>localStorage\.setItem\('weldel_use_instagram'[^<]*<\/script>/, toggleScript);
+    // Bake the toggle value — inject a small script that sets localStorage on load
+    // Inject toggle into HTML using safe string concatenation
+    const tagOpen  = '<' + 'script>';
+    const tagClose = '</' + 'script>';
+    const toggleLine = "localStorage.setItem('weldel_use_instagram','" + useIG + "');";
+    const toggleScript = tagOpen + toggleLine + tagClose;
+    if (html.indexOf('weldel_use_instagram') > -1) {
+        html = html.replace(/\<script\>localStorage\.setItem\('weldel_use_instagram'[^<]*\<\/script\>/, toggleScript);
     } else {
-        html = html.replace('</head>', toggleScript + '
-</head>');
+        html = html.replace('<' + '/head>', toggleScript + '<' + '/head>');
     }
 
     // EmailJS keys
