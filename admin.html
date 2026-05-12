@@ -487,13 +487,13 @@ var DEF = {
         {num:'05',title:'Fabrication',desc:'Precise fabrication of all metals.'}
     ],
     slides: [
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20260201_092555.jpg',     hashtag:'#CustomFabrication'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20260201_092703.jpg',     hashtag:'#OnSiteWelding'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20260201_093009.jpg',     hashtag:'#IndustrialFabrication'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20171211_161629.jpg',     hashtag:'#StructuralWelding'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20170810_070047 (1).jpg', hashtag:'#HeavyEquipmentRepair'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20171211_161629 (1).jpg', hashtag:'#CustomMetalWork'},
-        {src:'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/20260201_092450.jpg',     hashtag:'#CustomFabrication'}
+        {src:'20260201_092555.jpg',     hashtag:'#CustomFabrication'},
+        {src:'20260201_092703.jpg',     hashtag:'#OnSiteWelding'},
+        {src:'20260201_093009.jpg',     hashtag:'#IndustrialFabrication'},
+        {src:'20171211_161629.jpg',     hashtag:'#StructuralWelding'},
+        {src:'20170810_070047 (1).jpg', hashtag:'#HeavyEquipmentRepair'},
+        {src:'20171211_161629 (1).jpg', hashtag:'#CustomMetalWork'},
+        {src:'20260201_092450.jpg',     hashtag:'#CustomFabrication'}
     ],
     contact: {title:'Get a Quote',submit:'SEND MESSAGE',phone:true,service:true},
     emailjs: {pub:'-T4mq74FDF0mOq7jK',svc:'service_xne0fnb',tpl:'template_zy03sxs'},
@@ -679,7 +679,7 @@ async function uploadFiles(files) {
                 // Auto-add to slides list if not already there
                 var already = slides.some(function(s) { return s.src === file.name; });
                 if (!already) {
-                    slides.push({src: 'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/' + file.name, hashtag: ''});
+                    slides.push({src: file.name, hashtag: ''});
                 }
             } else {
                 var errData = await upRes.json();

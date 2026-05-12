@@ -229,9 +229,7 @@
             <button class="carousel-btn carousel-prev" id="prevBtn" aria-label="Previous">&#8592;</button>
             <div class="carousel-track" id="carouselTrack">
                 <!-- placeholder skeleton while loading -->
-                <div class="carousel-slide" id="carouselPlaceholder" style="background:linear-gradient(135deg,#0d1620,#111c27);display:flex;align-items:center;justify-content:center;min-width:100%">
-                    <div style="font-family:var(--font-main);font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2)">⚡ Loading photos&hellip;</div>
-                </div>
+
             </div>
             <button class="carousel-btn carousel-next" id="nextBtn" aria-label="Next">&#8594;</button>
         </div>
@@ -351,7 +349,7 @@
 // 4. Replace the three IDs below with your real ones
 const EMAILJS_PUBLIC_KEY  = '-T4mq74FDF0mOq7jK';
 const EMAILJS_SERVICE_ID  = 'service_xne0fnb';
-const EMAILJS_TEMPLATE_ID = 'service_xne0fnb';
+const EMAILJS_TEMPLATE_ID = 'template_zy03sxs';
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // ── CAROUSEL ───────────────────────────────────────────────────────────────
@@ -430,28 +428,18 @@ function loadFallbackCarousel() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem('weldel_slides')); } catch(e) {}
 
-    // Use full raw GitHub URLs so images always load regardless of server path
-    var BASE = 'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/';
+    // Use relative paths — Netlify serves these from its fast global CDN
     var defaults = [
-        {src: BASE + '20260201_092555.jpg',     hashtag:'#CustomFabrication'},
-        {src: BASE + '20260201_092703.jpg',     hashtag:'#OnSiteWelding'},
-        {src: BASE + '20260201_093009.jpg',     hashtag:'#IndustrialFabrication'},
-        {src: BASE + '20171211_161629.jpg',     hashtag:'#StructuralWelding'},
-        {src: BASE + '20170810_070047 (1).jpg', hashtag:'#HeavyEquipmentRepair'},
-        {src: BASE + '20171211_161629 (1).jpg', hashtag:'#CustomMetalWork'},
-        {src: BASE + '20260201_092450.jpg',     hashtag:'#CustomFabrication'},
+        {src:'20260201_092555.jpg',     hashtag:'#CustomFabrication'},
+        {src:'20260201_092703.jpg',     hashtag:'#OnSiteWelding'},
+        {src:'20260201_093009.jpg',     hashtag:'#IndustrialFabrication'},
+        {src:'20171211_161629.jpg',     hashtag:'#StructuralWelding'},
+        {src:'20170810_070047 (1).jpg', hashtag:'#HeavyEquipmentRepair'},
+        {src:'20171211_161629 (1).jpg', hashtag:'#CustomMetalWork'},
+        {src:'20260201_092450.jpg',     hashtag:'#CustomFabrication'},
     ];
 
-    // If admin has saved custom slides, prefix any relative paths with BASE too
-    var fallback = defaults;
-    if (saved && saved.length) {
-        fallback = saved.map(function(s) {
-            var src = s.src || '';
-            if (src && !src.startsWith('http')) src = BASE + src;
-            return {src: src, hashtag: s.hashtag || ''};
-        }).filter(function(s) { return s.src; });
-    }
-
+    var fallback = (saved && saved.length) ? saved : defaults;
     buildCarousel(fallback);
 }
 
