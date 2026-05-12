@@ -356,7 +356,7 @@
 // 4. Replace the three IDs below with your real ones
 const EMAILJS_PUBLIC_KEY  = '-T4mq74FDF0mOq7jK';
 const EMAILJS_SERVICE_ID  = 'service_xne0fnb';
-const EMAILJS_TEMPLATE_ID = 'template_zy03sxs';
+const EMAILJS_TEMPLATE_ID = 'service_xne0fnb';
 // Auto-load EmailJS keys from admin dashboard if they've been saved
 (function() {
     try {
@@ -482,14 +482,12 @@ async function loadInstagramCarousel() {
         console.warn('Instagram feed unavailable, using local photos:', err.message);
         // Fallback: local project photos with hashtag labels
         buildCarousel([
-            {src:'20260201_092555.jpg',  hashtag:'#CustomFabrication'},
-            {src:'20260201_092703.jpg',  hashtag:'#OnSiteWelding'},
-            {src:'20260201_093009.jpg',  hashtag:'#IndustrialFabrication'},
-            {src:'20171211_161629.jpg',  hashtag:'#StructuralWelding'},
-            {src:'20170810_070047__1_.jpg', hashtag:'#HeavyEquipmentRepair'},
-            {src:'20171211_161629__1_.jpg', hashtag:'#CustomMetalWork'},
-            {src:'20260201_092450.jpg',  hashtag:'#CustomFabrication'},
-        ]);
+        {src:"20260201_092555.jpg",hashtag:"#CustomFabrication"},
+        {src:"20260201_092703.jpg",hashtag:"#OnSiteWelding"},
+        {src:"20260201_093009.jpg",hashtag:"#IndustrialFabrication"},
+        {src:"20171211_161629.jpg",hashtag:"#StructuralWelding"},
+        {src:"20260201_092450.jpg",hashtag:"#CustomFabrication"}
+    ]);
     }
 }
 
