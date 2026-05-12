@@ -25,7 +25,7 @@
         .login-btn:hover{background:var(--gold-light)}.login-btn:active{transform:scale(.98)}
         .login-btn:disabled{opacity:.5;cursor:not-allowed}
         .login-error{color:#e74c3c;font-size:.82rem;margin-top:.75rem;display:none;font-family:var(--font)}
-        .login-hint{margin-top:1.5rem;font-size:.72rem;color:var(--text3);font-family:var(--font)}
+        .login-hint{display:none}
         .lockout-bar{height:4px;background:rgba(231,76,60,.15);border-radius:2px;margin-top:1rem;overflow:hidden;display:none}
         .lockout-fill{height:100%;background:var(--red);border-radius:2px;transition:width .3s}
 
@@ -433,7 +433,6 @@ function updateLockoutUI() {
     const bar  = document.getElementById('lockoutBar');
     const fill = document.getElementById('lockoutFill');
     const err  = document.getElementById('loginError');
-    const hint = document.getElementById('loginHint');
 
     if (locked) {
         const remaining = Math.ceil((locked - Date.now()) / 60000);
@@ -444,44 +443,31 @@ function updateLockoutUI() {
         bar.style.display = 'block';
         const pct = ((LOCKOUT_DURATION - (locked - Date.now())) / LOCKOUT_DURATION) * 100;
         fill.style.width = pct + '%';
-        hint.style.display = 'none';
         setTimeout(updateLockoutUI, 5000);
     } else {
         btn.disabled = false;
         btn.textContent = 'UNLOCK DASHBOARD';
         bar.style.display = 'none';
-        hint.style.display = 'block';
+        err.style.display = 'none';
     }
 }
 
+
 // ── AUTH ───────────────────────────────────────────────────────────────────
 const DEFAULT_PW = 'weldel2026';
-// Simple hash using Web Crypto for stored password comparison
-async function hashPW(pw) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+
+function getPW() {
+    return localStorage.getItem('weldel_admin_pw') || DEFAULT_PW;
 }
 
-async function getPWHash() {
-    const stored = localStorage.getItem('weldel_admin_pwh');
-    if (stored) return stored;
-    // First run — hash the default password and store it
-    const h = await hashPW(DEFAULT_PW);
-    localStorage.setItem('weldel_admin_pwh', h);
-    return h;
-}
-
-async function tryLogin() {
+function tryLogin() {
     if (isLockedOut()) { updateLockoutUI(); return; }
 
     const val = document.getElementById('adminPass').value;
     const err = document.getElementById('loginError');
     if (!val) return;
 
-    const inputHash  = await hashPW(val);
-    const storedHash = await getPWHash();
-
-    if (inputHash === storedHash) {
+    if (val === getPW()) {
         resetLockout();
         sessionStorage.setItem('weldel_authed','1');
         document.getElementById('loginScreen').style.display='none';
@@ -505,14 +491,17 @@ document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key
 
 function logout() { sessionStorage.removeItem('weldel_authed'); location.reload(); }
 
-// Auto-login if session still valid
-if (sessionStorage.getItem('weldel_authed')==='1') {
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    init();
-} else {
-    updateLockoutUI();
-}
+// Run after DOM is fully ready
+window.addEventListener('DOMContentLoaded', function() {
+    resetLockout(); // clear any stale lockout on fresh page load
+    if (sessionStorage.getItem('weldel_authed') === '1') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        init();
+    } else {
+        updateLockoutUI();
+    }
+});
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────
 function switchPanel(el) {
@@ -629,7 +618,7 @@ function saveBehold() {
     if (!id) { showMsg('behold-msg', '⚡ Paste your Behold Feed ID.', 'err'); return; }
     // Basic format check — Behold IDs are alphanumeric ~20 chars
     if (!/^[a-zA-Z0-9]{10,40}$/.test(id)) {
-        showMsg('behold-msg', '⚡ That doesn't look like a valid Feed ID. Copy it directly from your Behold embed code.', 'err');
+        showMsg('behold-msg', '⚡ Invalid Feed ID. Copy it directly from your Behold embed code.', 'err');
         return;
     }
     save('behold_id', id);
@@ -804,19 +793,15 @@ function bakeDataIntoHTML(html) {
 }
 
 // ── PASSWORD ───────────────────────────────────────────────────────────────
-async function changePW() {
-    const cur=document.getElementById('pw-cur').value;
-    const nw=document.getElementById('pw-new').value;
-    const conf=document.getElementById('pw-confirm').value;
-    const curHash=await hashPW(cur);
-    const stored=await getPWHash();
-    if(curHash!==stored){showMsg('pw-msg','Current password incorrect.','err');return;}
-    if(nw.length<8){showMsg('pw-msg','New password must be 8+ characters.','err');return;}
-    if(nw!==conf){showMsg('pw-msg','Passwords do not match.','err');return;}
-    const newHash=await hashPW(nw);
-    localStorage.setItem('weldel_admin_pwh',newHash);
-    localStorage.removeItem('weldel_admin_pw'); // remove old plaintext if any
-    ['pw-cur','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
+function changePW() {
+    const cur  = document.getElementById('pw-cur').value;
+    const nw   = document.getElementById('pw-new').value;
+    const conf = document.getElementById('pw-confirm').value;
+    if (cur !== getPW()) { showMsg('pw-msg','Current password incorrect.','err'); return; }
+    if (nw.length < 8)   { showMsg('pw-msg','New password must be 8+ characters.','err'); return; }
+    if (nw !== conf)     { showMsg('pw-msg','Passwords do not match.','err'); return; }
+    localStorage.setItem('weldel_admin_pw', nw);
+    ['pw-cur','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
     showMsg('pw-msg','✅ Password updated!','ok');
 }
 
