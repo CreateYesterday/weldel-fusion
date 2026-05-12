@@ -817,15 +817,20 @@ function bakeDataIntoHTML(html) {
         '\n    ]);';
     html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slidesJS);
 
-    // Behold toggle — swap loadInstagramCarousel call for loadFallbackCarousel if toggled off
+    // Behold toggle + Feed ID — bake the correct setting into the HTML
     const useIG = load('use_instagram') !== false;
-    if (!useIG) {
-        html = html.replace('loadInstagramCarousel();', 'loadFallbackCarousel(); // admin: fallback mode');
+    const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
+    // Always bake the latest Behold Feed ID
+    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
+    // Bake the toggle value so the site knows which mode to use
+    // The site reads localStorage('weldel_use_instagram') — we set it via an inline script
+    const toggleScript = `<script>localStorage.setItem('weldel_use_instagram','${useIG}');</script>`;
+    // Replace existing toggle script if present, otherwise inject before </head>
+    if (html.includes("localStorage.setItem('weldel_use_instagram'")) ) {
+        html = html.replace(/<script>localStorage\.setItem\('weldel_use_instagram'[^<]*<\/script>/, toggleScript);
     } else {
-        const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
-        html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
-        // Make sure Instagram mode is restored if previously set to fallback
-        html = html.replace('loadFallbackCarousel(); // admin: fallback mode', 'loadInstagramCarousel();');
+        html = html.replace('</head>', toggleScript + '
+</head>');
     }
 
     // EmailJS keys
