@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WelDel Admin Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#070f14;--bg2:#0d1620;--bg3:#111c27;--border:rgba(255,255,255,0.07);--border-gold:rgba(212,175,55,0.35);--gold:#D4AF37;--gold-light:#f0d060;--red:#e74c3c;--green:#27ae60;--orange:#ff8c00;--text:#fff;--text2:rgba(255,255,255,0.6);--text3:rgba(255,255,255,0.3);--font:'Montserrat',sans-serif;--font-body:'Inter',sans-serif;--radius:8px;--shadow:0 8px 32px rgba(0,0,0,.7)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+
+        /* LOGIN */
+        #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;background-image:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(212,175,55,.07) 0%,transparent 70%)}
+        .login-box{width:100%;max-width:400px;padding:3rem 2.5rem;background:var(--bg2);border:1px solid var(--border-gold);border-radius:12px;box-shadow:0 0 80px rgba(212,175,55,.07),var(--shadow);text-align:center}
+        .login-logo{font-family:var(--font);font-size:2rem;font-weight:900;margin-bottom:.2rem;letter-spacing:-1px}
+        .login-logo span{background:linear-gradient(to right,#d4af37,#fceea7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .login-sub{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:2.5rem;font-family:var(--font)}
+        .login-box label{display:block;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.5rem;font-family:var(--font);font-weight:700}
+        .login-box input[type=password]{width:100%;padding:14px 16px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:6px;font-family:var(--font-body);font-size:1rem;margin-bottom:1.25rem;transition:border-color .2s}
+        .login-box input[type=password]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.12)}
+        .login-btn{width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:6px;font-family:var(--font);font-size:.85rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .1s}
+        .login-btn:hover{background:var(--gold-light)}.login-btn:active{transform:scale(.98)}
+        .login-btn:disabled{opacity:.5;cursor:not-allowed}
+        .login-error{color:#e74c3c;font-size:.82rem;margin-top:.75rem;display:none;font-family:var(--font)}
+        .login-hint{margin-top:1.5rem;font-size:.72rem;color:var(--text3);font-family:var(--font)}
+        .lockout-bar{height:4px;background:rgba(231,76,60,.15);border-radius:2px;margin-top:1rem;overflow:hidden;display:none}
+        .lockout-fill{height:100%;background:var(--red);border-radius:2px;transition:width .3s}
+
+        /* TOPBAR */
+        #dashboard{display:none;min-height:100vh}
+        .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.5)}
+        .topbar-brand{font-family:var(--font);font-size:1rem;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:.5rem}
+        .topbar-brand span{background:linear-gradient(to right,#d4af37,#fceea7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .topbar-pill{font-size:.65rem;font-family:var(--font);font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:.35rem}
+        .topbar-dot{width:5px;height:5px;background:#27ae60;border-radius:50%;animation:pd 2s infinite}
+        @keyframes pd{0%,100%{opacity:1}50%{opacity:.2}}
+        .topbar-right{display:flex;align-items:center;gap:.6rem}
+
+        /* LAYOUT */
+        .layout{display:flex;min-height:calc(100vh - 60px)}
+        .sidebar{width:200px;background:var(--bg2);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+        .sidebar-sep{margin:.75rem 1rem .25rem;font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--font)}
+        .nav-item{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.1rem;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;border-left:2px solid transparent;font-family:var(--font);user-select:none}
+        .nav-item:hover{background:rgba(255,255,255,.03);color:var(--text)}
+        .nav-item.active{background:rgba(212,175,55,.07);color:var(--gold);border-left-color:var(--gold)}
+        .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+        .main{flex:1;padding:1.75rem 2rem;overflow-y:auto;max-width:900px}
+        @media(max-width:900px){.sidebar{display:none}.main{padding:1.25rem}}
+
+        /* PANELS */
+        .panel{display:none;animation:fadeIn .2s ease}.panel.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+        .page-title{font-family:var(--font);font-size:1.35rem;font-weight:900;margin-bottom:.25rem;letter-spacing:-.5px}
+        .page-sub{color:var(--text2);font-size:.85rem;margin-bottom:1.75rem;line-height:1.5}
+
+        /* CARDS */
+        .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+        .card-title{font-family:var(--font);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.4rem}
+
+        /* STATS */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.25rem}
+        .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;transition:border-color .2s}
+        .stat-card:hover{border-color:var(--border-gold)}
+        .stat-val{font-family:var(--font);font-size:1.8rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.25rem}
+        .stat-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);font-family:var(--font)}
+
+        /* FORM */
+        .field{margin-bottom:1.1rem}
+        .field label{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.4rem;font-family:var(--font)}
+        .field input,.field textarea,.field select{width:100%;padding:10px 13px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:5px;font-family:var(--font-body);font-size:.9rem;transition:border-color .2s,box-shadow .2s}
+        .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.1)}
+        .field textarea{resize:vertical;min-height:80px;line-height:1.5}
+        .field select option{background:#111}
+        .field input[readonly]{opacity:.5;cursor:default}
+        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        @media(max-width:600px){.field-row{grid-template-columns:1fr}}
+        .char-count{font-size:.68rem;color:var(--text3);text-align:right;margin-top:.2rem;font-family:var(--font)}
+        .field-hint{font-size:.75rem;color:var(--text3);margin-top:.3rem;line-height:1.4}
+
+        /* BUTTONS */
+        .btn{display:inline-flex;align-items:center;gap:.35rem;padding:9px 18px;border:none;border-radius:5px;font-family:var(--font);font-size:.75rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
+        .btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed}
+        .btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:var(--gold-light)}
+        .btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--border-gold);color:var(--gold)}
+        .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(231,76,60,.25)}.btn-danger:hover{background:rgba(231,76,60,.1);border-color:var(--red)}
+        .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#2ecc71}
+        .btn-blue{background:#2874A6;color:#fff}.btn-blue:hover{background:#3498db}
+        .btn-sm{padding:6px 12px;font-size:.68rem}
+        .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+
+        /* MESSAGES */
+        .msg{padding:11px 15px;border-radius:5px;font-size:.78rem;font-family:var(--font);letter-spacing:.8px;margin-top:.75rem;display:none;line-height:1.5}
+        .msg.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
+        .msg.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
+        .msg.info{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
+
+        /* TOGGLES */
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)}
+        .toggle-row:last-child{border-bottom:none}
+        .toggle-label{font-size:.85rem;font-weight:600;line-height:1.4}
+        .toggle-sub{font-size:.72rem;color:var(--text3);margin-top:.15rem}
+        .switch{position:relative;width:42px;height:23px;flex-shrink:0}
+        .switch input{opacity:0;width:0;height:0}
+        .slider{position:absolute;inset:0;background:#1e2a38;border-radius:23px;cursor:pointer;transition:.3s}
+        .slider::before{content:'';position:absolute;width:17px;height:17px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+        input:checked+.slider{background:var(--gold)}
+        input:checked+.slider::before{transform:translateX(19px)}
+
+        /* SLIDES */
+        .slide-list{display:flex;flex-direction:column;gap:.6rem}
+        .slide-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;display:flex;gap:.9rem;align-items:center;transition:border-color .15s}
+        .slide-item:hover{border-color:var(--border-gold)}
+        .slide-thumb{width:78px;height:46px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;background:#0a0f15}
+        .slide-meta{flex:1;min-width:0}
+        .slide-meta input{width:100%;background:#050a0f;border:1px solid #1e2a38;color:#fff;padding:6px 10px;border-radius:4px;font-size:.82rem;font-family:var(--font-body);transition:border-color .2s}
+        .slide-meta input:focus{outline:none;border-color:var(--gold)}
+        .slide-meta input+input{margin-top:.35rem}
+        .slide-btns{display:flex;gap:.3rem;flex-shrink:0}
+        .drag-handle{color:var(--text3);cursor:grab;font-size:1.1rem;padding:0 .15rem;user-select:none;flex-shrink:0}
+        .add-area{border:2px dashed rgba(212,175,55,.25);border-radius:6px;padding:1.5rem;text-align:center;color:var(--text3);cursor:pointer;transition:all .2s;font-family:var(--font);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;margin-top:.6rem}
+        .add-area:hover{background:rgba(212,175,55,.03);color:var(--text2);border-color:rgba(212,175,55,.4)}
+
+        /* SERVICES */
+        .svc-row{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:.6rem;transition:border-color .15s}
+        .svc-row:hover{border-color:var(--border-gold)}
+        .svc-num{font-family:var(--font);font-size:1.4rem;font-weight:900;color:rgba(212,175,55,.18);margin-bottom:.5rem}
+
+        /* GITHUB DEPLOY */
+        .deploy-status{padding:14px 18px;border-radius:6px;font-family:var(--font);font-size:.8rem;letter-spacing:1px;margin-top:1rem;display:none;line-height:1.6}
+        .deploy-status.deploying{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
+        .deploy-status.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
+        .deploy-status.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
+        .setup-note{background:rgba(255,140,0,.05);border:1px solid rgba(255,140,0,.18);border-radius:6px;padding:1rem 1.1rem;margin-bottom:1.1rem}
+        .setup-note p{font-size:.8rem;color:rgba(255,200,100,.75);line-height:1.8}
+        .setup-note strong{color:var(--orange)}
+        .setup-note a{color:var(--orange);text-decoration:underline}
+        .code-box{background:#050a0f;border:1px solid #1e2a38;border-radius:5px;padding:.85rem 1rem;font-family:monospace;font-size:.78rem;color:#a0cfff;margin-top:.5rem;white-space:pre-wrap;user-select:all;line-height:1.6}
+        .step-list{display:flex;flex-direction:column;gap:.75rem}
+        .step{display:flex;gap:1rem;align-items:flex-start;padding:.9rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px}
+        .step-n{width:28px;height:28px;border-radius:50%;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:.75rem;font-weight:800;color:var(--gold);flex-shrink:0;margin-top:.05rem}
+        .step-body{flex:1}.step-title{font-family:var(--font);font-size:.82rem;font-weight:700;margin-bottom:.2rem}
+        .step-desc{font-size:.78rem;color:var(--text2);line-height:1.5}
+        .gh-configured{background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.25);border-radius:6px;padding:1rem;display:none;margin-bottom:1rem}
+        .gh-configured p{font-size:.82rem;color:#27ae60;font-family:var(--font)}
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="login-logo">WelDel <span>Admin</span></div>
+        <div class="login-sub">Secure Dashboard Access</div>
+        <label for="adminPass">Password</label>
+        <input type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password">
+        <button class="login-btn" id="loginBtn" onclick="tryLogin()">UNLOCK DASHBOARD</button>
+        <div class="login-error" id="loginError"></div>
+        <div class="lockout-bar" id="lockoutBar"><div class="lockout-fill" id="lockoutFill"></div></div>
+        <div class="login-hint" id="loginHint">Default password: <strong>weldel2026</strong></div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+    <div class="topbar">
+        <div class="topbar-brand">WelDel <span>Admin</span> <span class="topbar-pill"><span class="topbar-dot"></span>Live</span></div>
+        <div class="topbar-right">
+            <a href="index.html" target="_blank" class="btn btn-outline btn-sm" style="text-decoration:none">↗ View Site</a>
+            <button class="btn btn-blue btn-sm" onclick="pushLive()" id="pushBtn">🚀 Push Live</button>
+            <button class="btn btn-outline btn-sm" onclick="logout()" style="color:#e74c3c;border-color:rgba(231,76,60,.25)">Logout</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-sep">Pages</div>
+            <div class="nav-item active" data-panel="overview" onclick="switchPanel(this)"><span class="nav-icon">🏠</span>Overview</div>
+            <div class="nav-item" data-panel="hero" onclick="switchPanel(this)"><span class="nav-icon">⚡</span>Hero</div>
+            <div class="nav-item" data-panel="about" onclick="switchPanel(this)"><span class="nav-icon">👷</span>About</div>
+            <div class="nav-item" data-panel="services" onclick="switchPanel(this)"><span class="nav-icon">🔧</span>Services</div>
+            <div class="nav-item" data-panel="gallery" onclick="switchPanel(this)"><span class="nav-icon">📸</span>Gallery</div>
+            <div class="nav-item" data-panel="contact" onclick="switchPanel(this)"><span class="nav-icon">📬</span>Contact</div>
+            <div class="sidebar-sep">Deploy</div>
+            <div class="nav-item" data-panel="deploy" onclick="switchPanel(this)"><span class="nav-icon">🚀</span>GitHub Deploy</div>
+            <div class="sidebar-sep">Settings</div>
+            <div class="nav-item" data-panel="email" onclick="switchPanel(this)"><span class="nav-icon">📧</span>Email Setup</div>
+            <div class="nav-item" data-panel="password" onclick="switchPanel(this)"><span class="nav-icon">🔒</span>Password</div>
+        </aside>
+
+        <main class="main">
+
+            <!-- OVERVIEW -->
+            <div class="panel active" id="panel-overview">
+                <div class="page-title">Overview</div>
+                <div class="page-sub">Your WelDel Fusion website dashboard.</div>
+                <div id="deploy-status-overview" class="deploy-status"></div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-val" id="ov-slides">7</div><div class="stat-label">Gallery Photos</div></div>
+                    <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">Services</div></div>
+                    <div class="stat-card"><div class="stat-val" id="ov-years">27</div><div class="stat-label">Yrs Experience</div></div>
+                    <div class="stat-card"><div class="stat-val" id="ov-gh">⚙️</div><div class="stat-label">GitHub Deploy</div></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🚀 Push Live</div>
+                    <p style="font-size:.85rem;color:var(--text2);margin-bottom:1rem;line-height:1.6">Make your edits in any section, save them, then click <strong style="color:var(--gold)">Push Live</strong> to deploy instantly to Netlify via GitHub. No drag and drop needed.</p>
+                    <div class="btn-row" style="margin-top:0">
+                        <button class="btn btn-blue" onclick="pushLive()" id="pushBtn2">🚀 Push Live to Netlify</button>
+                        <button class="btn btn-outline" onclick="gotoPanel('deploy')">⚙️ GitHub Setup</button>
+                    </div>
+                    <div class="deploy-status" id="deploy-status-main"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⚡ Quick Actions</div>
+                    <div class="btn-row" style="margin-top:0">
+                        <button class="btn btn-gold" onclick="gotoPanel('gallery')">Edit Gallery</button>
+                        <button class="btn btn-outline" onclick="gotoPanel('hero')">Edit Hero</button>
+                        <button class="btn btn-outline" onclick="gotoPanel('services')">Edit Services</button>
+                        <button class="btn btn-outline" onclick="gotoPanel('email')">Email Setup</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HERO -->
+            <div class="panel" id="panel-hero">
+                <div class="page-title">Hero Section</div>
+                <div class="page-sub">Edit the main headline at the top of your site.</div>
+                <div class="card">
+                    <div class="card-title">⚡ Hero Content</div>
+                    <div class="field"><label>Top Badge Text</label><input type="text" id="hero-badge" placeholder="27 YEARS INDUSTRIAL EXPERIENCE"></div>
+                    <div class="field"><label>Subtitle</label><textarea id="hero-desc" rows="3" oninput="count(this,'hero-dc')"></textarea><div class="char-count" id="hero-dc">0 chars</div></div>
+                    <div class="field-row">
+                        <div class="field"><label>Primary Button</label><input type="text" id="hero-btn1" placeholder="GET A QUOTE"></div>
+                        <div class="field"><label>Secondary Button</label><input type="text" id="hero-btn2" placeholder="OUR SERVICES"></div>
+                    </div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="saveHero()">💾 Save</button><button class="btn btn-blue" onclick="saveHero();pushLive()">💾 Save &amp; Push Live</button></div>
+                    <div class="msg" id="hero-msg"></div>
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="panel" id="panel-about">
+                <div class="page-title">About Section</div>
+                <div class="page-sub">Edit the About text shown next to the rig photo.</div>
+                <div class="card">
+                    <div class="card-title">👷 About Content</div>
+                    <div class="field"><label>Heading</label><input type="text" id="about-heading" placeholder="About"></div>
+                    <div class="field"><label>Body Paragraph</label><textarea id="about-body" rows="6" oninput="count(this,'about-dc')"></textarea><div class="char-count" id="about-dc">0 chars</div></div>
+                    <div class="field"><label>Years of Experience</label><input type="number" id="about-years" min="1" max="99"></div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="saveAbout()">💾 Save</button><button class="btn btn-blue" onclick="saveAbout();pushLive()">💾 Save &amp; Push Live</button></div>
+                    <div class="msg" id="about-msg"></div>
+                </div>
+            </div>
+
+            <!-- SERVICES -->
+            <div class="panel" id="panel-services">
+                <div class="page-title">Services</div>
+                <div class="page-sub">Edit the five service tiles.</div>
+                <div id="svc-editor"></div>
+                <div class="btn-row"><button class="btn btn-gold" onclick="saveServices()">💾 Save</button><button class="btn btn-blue" onclick="saveServices();pushLive()">💾 Save &amp; Push Live</button></div>
+                <div class="msg" id="svc-msg"></div>
+            </div>
+
+            <!-- GALLERY -->
+            <div class="panel" id="panel-gallery">
+                <div class="page-title">Gallery / Carousel</div>
+                <div class="page-sub">Manage your Instagram carousel feed and fallback slides.</div>
+
+                <div class="card">
+                    <div class="card-title">📷 Behold Instagram Feed</div>
+                    <div class="field">
+                        <label>Behold Feed ID</label>
+                        <input type="text" id="behold-id" placeholder="e.g. vxRtAawIFxINH0EnSqBo">
+                        <div class="field-hint">Found in your Behold embed code: <code style="color:#a0cfff">&lt;behold-widget feed-id="YOUR_ID"&gt;</code> — get it at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a>. Change it here anytime and click Save &amp; Push Live.</div>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveBehold()">💾 Save Feed ID</button>
+                        <button class="btn btn-blue" onclick="saveBehold();pushLive()">💾 Save &amp; Push Live</button>
+                    </div>
+                    <div class="msg" id="behold-msg"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🖼️ Fallback Slides <span style="font-size:.7rem;color:var(--text3);font-weight:400;margin-left:.5rem" id="slide-count-badge"></span></div>
+                    <div class="slide-list" id="slideList"></div>
+                    <div class="add-area" onclick="addSlide()">＋ Add New Slide</div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveSlides()">💾 Save</button>
+                        <button class="btn btn-blue" onclick="saveSlides();pushLive()">💾 Save &amp; Push Live</button>
+                        <button class="btn btn-outline btn-sm" onclick="resetSlides()">Reset Defaults</button>
+                    </div>
+                    <div class="msg" id="slides-msg"></div>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="panel" id="panel-contact">
+                <div class="page-title">Contact Form</div>
+                <div class="page-sub">Adjust form settings. Rate limit: 5 submissions/hour per visitor.</div>
+                <div class="card">
+                    <div class="card-title">📬 Form Settings</div>
+                    <div class="field"><label>Section Title</label><input type="text" id="contact-title" placeholder="Get a Quote"></div>
+                    <div class="field"><label>Destination Email (read-only)</label><input type="email" value="Buckbabcockv@gmail.com" readonly></div>
+                    <div class="field"><label>Submit Button Label</label><input type="text" id="contact-submit" placeholder="SEND MESSAGE"></div>
+                    <div class="toggle-row" style="margin-top:.5rem">
+                        <div><div class="toggle-label">Show Phone Field</div><div class="toggle-sub">Optional phone input</div></div>
+                        <label class="switch"><input type="checkbox" id="contact-phone" checked><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <div><div class="toggle-label">Show Service Dropdown</div><div class="toggle-sub">Let customers pick a service type</div></div>
+                        <label class="switch"><input type="checkbox" id="contact-service" checked><span class="slider"></span></label>
+                    </div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="saveContact()">💾 Save</button><button class="btn btn-blue" onclick="saveContact();pushLive()">💾 Save &amp; Push Live</button></div>
+                    <div class="msg" id="contact-msg"></div>
+                </div>
+            </div>
+
+            <!-- GITHUB DEPLOY -->
+            <div class="panel" id="panel-deploy">
+                <div class="page-title">GitHub Auto-Deploy</div>
+                <div class="page-sub">Connect GitHub so every save pushes live to Netlify automatically — no drag and drop ever.</div>
+
+                <div class="gh-configured" id="gh-configured-badge">
+                    <p>✅ GitHub is connected. Your site deploys automatically when you click <strong>Push Live</strong>.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📋 One-Time Setup (10 minutes)</div>
+                    <div class="step-list">
+                        <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <a href="https://github.com" target="_blank" style="color:var(--orange)">github.com</a> → Sign up free with your email.</div></div></div>
+                        <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">Create a new repository</div><div class="step-desc">Click <strong>New repository</strong> → name it <code style="color:#a0cfff">weldel-fusion</code> → set to <strong>Public</strong> → click Create.</div></div></div>
+                        <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">Upload your site files to GitHub</div><div class="step-desc">In your new repo → click <strong>uploading an existing file</strong> → drag all your files (index.html, admin.html, logo.png, rig.jpg, all .jpg photos, netlify.toml) → click Commit.</div></div></div>
+                        <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">Connect Netlify to GitHub</div><div class="step-desc">In Netlify → <strong>Add new site → Import from Git → GitHub</strong> → pick your <code style="color:#a0cfff">weldel-fusion</code> repo → Deploy. Your domain connects automatically.</div></div></div>
+                        <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Create a GitHub Personal Access Token</div><div class="step-desc">GitHub → Settings → Developer settings → <strong>Personal access tokens → Fine-grained tokens → Generate new</strong>.<br>Set: Repository access → <strong>weldel-fusion only</strong>. Permissions → Contents → <strong>Read and Write</strong>. Copy the token — you only see it once.</div></div></div>
+                        <div class="step"><div class="step-n">6</div><div class="step-body"><div class="step-title">Enter your details below and Save</div><div class="step-desc">Paste your GitHub username, repo name, and token below. From now on, click <strong>Push Live</strong> to deploy instantly.</div></div></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🔑 GitHub Credentials</div>
+                    <div class="setup-note">
+                        <p>Your token is stored <strong>only in your browser</strong> (localStorage). It never leaves your device except when making a deploy commit to GitHub. Use a Fine-grained token scoped only to this repo for maximum security.</p>
+                    </div>
+                    <div class="field-row">
+                        <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" placeholder="e.g. BuckBabcock"></div>
+                        <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="e.g. weldel-fusion"></div>
+                    </div>
+                    <div class="field"><label>Branch</label><input type="text" id="gh-branch" placeholder="main" value="main"></div>
+                    <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveGHConfig()">💾 Save GitHub Config</button>
+                        <button class="btn btn-blue" onclick="pushLive()">🚀 Test Push Live</button>
+                    </div>
+                    <div class="msg" id="gh-msg"></div>
+                    <div class="deploy-status" id="deploy-status-gh"></div>
+                </div>
+            </div>
+
+            <!-- EMAIL SETUP -->
+            <div class="panel" id="panel-email">
+                <div class="page-title">Email Setup</div>
+                <div class="page-sub">EmailJS credentials for the quote form.</div>
+                <div class="card">
+                    <div class="card-title">📧 EmailJS Config</div>
+                    <div class="setup-note">
+                        <p><strong>Already configured</strong> with your real keys. Update here if you ever need to change them.</p>
+                    </div>
+                    <div class="field-row">
+                        <div class="field"><label>Public Key</label><input type="text" id="ej-pub" placeholder="Public key"></div>
+                        <div class="field"><label>Service ID</label><input type="text" id="ej-svc" placeholder="service_..."></div>
+                    </div>
+                    <div class="field"><label>Template ID</label><input type="text" id="ej-tpl" placeholder="template_..."></div>
+                    <div class="field"><label>Destination Email</label><input type="email" value="Buckbabcockv@gmail.com" readonly></div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="saveEmailJS()">💾 Save</button></div>
+                    <div class="msg" id="email-msg"></div>
+                </div>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="panel" id="panel-password">
+                <div class="page-title">Change Password</div>
+                <div class="page-sub">Update your admin login password.</div>
+                <div class="card" style="max-width:400px">
+                    <div class="card-title">🔒 Update Password</div>
+                    <div class="field"><label>Current Password</label><input type="password" id="pw-cur" placeholder="Current password"></div>
+                    <div class="field"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 8 characters"></div>
+                    <div class="field"><label>Confirm New Password</label><input type="password" id="pw-confirm" placeholder="Repeat new password"></div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="changePW()">🔒 Update Password</button></div>
+                    <div class="msg" id="pw-msg"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+// ── SECURITY — Login lockout after 5 failed attempts ──────────────────────
+const LOCKOUT_KEY     = 'weldel_lockout';
+const LOCKOUT_MAX     = 5;
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+
+function getLockout() {
+    try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY) || '{"attempts":0,"lockedUntil":0}'); }
+    catch(e) { return {attempts:0,lockedUntil:0}; }
+}
+function saveLockout(data) { localStorage.setItem(LOCKOUT_KEY, JSON.stringify(data)); }
+
+function isLockedOut() {
+    const d = getLockout();
+    if (d.lockedUntil && Date.now() < d.lockedUntil) return d.lockedUntil;
+    return false;
+}
+
+function recordFailedAttempt() {
+    const d = getLockout();
+    d.attempts = (d.attempts || 0) + 1;
+    if (d.attempts >= LOCKOUT_MAX) {
+        d.lockedUntil = Date.now() + LOCKOUT_DURATION;
+        d.attempts = 0;
+    }
+    saveLockout(d);
+    return d;
+}
+
+function resetLockout() { saveLockout({attempts:0,lockedUntil:0}); }
+
+function updateLockoutUI() {
+    const locked = isLockedOut();
+    const btn  = document.getElementById('loginBtn');
+    const bar  = document.getElementById('lockoutBar');
+    const fill = document.getElementById('lockoutFill');
+    const err  = document.getElementById('loginError');
+    const hint = document.getElementById('loginHint');
+
+    if (locked) {
+        const remaining = Math.ceil((locked - Date.now()) / 60000);
+        btn.disabled = true;
+        btn.textContent = `LOCKED — ${remaining} min`;
+        err.textContent = `Too many failed attempts. Try again in ${remaining} minute${remaining!==1?'s':''}.`;
+        err.style.display = 'block';
+        bar.style.display = 'block';
+        const pct = ((LOCKOUT_DURATION - (locked - Date.now())) / LOCKOUT_DURATION) * 100;
+        fill.style.width = pct + '%';
+        hint.style.display = 'none';
+        setTimeout(updateLockoutUI, 5000);
+    } else {
+        btn.disabled = false;
+        btn.textContent = 'UNLOCK DASHBOARD';
+        bar.style.display = 'none';
+        hint.style.display = 'block';
+    }
+}
+
+// ── AUTH ───────────────────────────────────────────────────────────────────
+const DEFAULT_PW = 'weldel2026';
+// Simple hash using Web Crypto for stored password comparison
+async function hashPW(pw) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getPWHash() {
+    const stored = localStorage.getItem('weldel_admin_pwh');
+    if (stored) return stored;
+    // First run — hash the default password and store it
+    const h = await hashPW(DEFAULT_PW);
+    localStorage.setItem('weldel_admin_pwh', h);
+    return h;
+}
+
+async function tryLogin() {
+    if (isLockedOut()) { updateLockoutUI(); return; }
+
+    const val = document.getElementById('adminPass').value;
+    const err = document.getElementById('loginError');
+    if (!val) return;
+
+    const inputHash  = await hashPW(val);
+    const storedHash = await getPWHash();
+
+    if (inputHash === storedHash) {
+        resetLockout();
+        sessionStorage.setItem('weldel_authed','1');
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('dashboard').style.display='block';
+        init();
+    } else {
+        const d = recordFailedAttempt();
+        const remaining = LOCKOUT_MAX - (d.attempts || 0);
+        if (isLockedOut()) {
+            updateLockoutUI();
+        } else {
+            err.textContent = `Incorrect password. ${remaining} attempt${remaining!==1?'s':''} remaining before lockout.`;
+            err.style.display = 'block';
+            document.getElementById('adminPass').value = '';
+            setTimeout(()=>err.style.display='none', 4000);
+        }
+    }
+}
+
+document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+
+function logout() { sessionStorage.removeItem('weldel_authed'); location.reload(); }
+
+// Auto-login if session still valid
+if (sessionStorage.getItem('weldel_authed')==='1') {
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    init();
+} else {
+    updateLockoutUI();
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function switchPanel(el) {
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+el.dataset.panel).classList.add('active');
+}
+function gotoPanel(name) {
+    const el = document.querySelector(`[data-panel="${name}"]`);
+    if(el) switchPanel(el);
+}
+
+// ── DATA STORE ─────────────────────────────────────────────────────────────
+const DEFAULTS = {
+    hero:     { badge:'27 YEARS INDUSTRIAL EXPERIENCE', desc:'Expert Stick, TIG, and Aluminum welding based in Victoria, BC. Quality fabrication delivered to your doorstep.', btn1:'GET A QUOTE', btn2:'OUR SERVICES' },
+    about:    { heading:'About', body:'My company specializes in custom welding projects for your home or business. If you have an idea of something you need made I can make it happen based on my 27 years of industrial welding experience. I have a home based shop or a portable welding rig to do on site fabrication.', years:'27' },
+    services: [
+        {num:'01',title:'Stick Welding',desc:'Structural steel or pipe.'},
+        {num:'02',title:'TIG Welding',desc:'Stainless steel, chrome, mild steel.'},
+        {num:'03',title:'Aluminum',desc:'Aluminum wire feed welding.'},
+        {num:'04',title:'Cutting',desc:'Plasma cutting, carbon arc gauging, oxy acetylene cutting.'},
+        {num:'05',title:'Fabrication',desc:'Precise fabrication of all metals.'},
+    ],
+    slides:   [
+        {src:'20260201_092555.jpg',hashtag:'#CustomFabrication'},
+        {src:'20260201_092703.jpg',hashtag:'#OnSiteWelding'},
+        {src:'20260201_093009.jpg',hashtag:'#IndustrialFabrication'},
+        {src:'20171211_161629.jpg',hashtag:'#StructuralWelding'},
+        {src:'20170810_070047__1_.jpg',hashtag:'#HeavyEquipmentRepair'},
+        {src:'20171211_161629__1_.jpg',hashtag:'#CustomMetalWork'},
+        {src:'20260201_092450.jpg',hashtag:'#CustomFabrication'},
+    ],
+    contact:  { title:'Get a Quote', submit:'SEND MESSAGE', phone:true, service:true },
+    emailjs:  { pub:'-T4mq74FDF0mOq7jK', svc:'service_xne0fnb', tpl:'template_zy03sxs' },
+};
+
+function load(k) { try { return JSON.parse(localStorage.getItem('weldel_'+k)); } catch(e) { return null; } }
+function save(k,v) { localStorage.setItem('weldel_'+k, JSON.stringify(v)); }
+function get(k) { return load(k) || DEFAULTS[k]; }
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+function init() {
+    loadHero(); loadAbout(); loadServices(); loadSlides();
+    loadContact(); loadEmailJS(); loadGHConfig(); loadBehold();
+    updateOverview();
+}
+function count(el,id) { const c=document.getElementById(id); if(c) c.textContent=el.value.length+' chars'; }
+
+// ── OVERVIEW ───────────────────────────────────────────────────────────────
+function updateOverview() {
+    const slides = get('slides');
+    document.getElementById('ov-slides').textContent = Array.isArray(slides) ? slides.length : 7;
+    document.getElementById('ov-years').textContent  = get('about').years || '27';
+    const gh = load('gh');
+    const ghOk = gh && gh.user && gh.repo && gh.token;
+    document.getElementById('ov-gh').textContent = ghOk ? '✅' : '⚙️';
+    const badge = document.getElementById('gh-configured-badge');
+    if(badge) badge.style.display = ghOk ? 'block' : 'none';
+}
+
+// ── HERO ───────────────────────────────────────────────────────────────────
+function loadHero() {
+    const d=get('hero');
+    document.getElementById('hero-badge').value=d.badge;
+    document.getElementById('hero-desc').value=d.desc;
+    document.getElementById('hero-btn1').value=d.btn1;
+    document.getElementById('hero-btn2').value=d.btn2;
+    count(document.getElementById('hero-desc'),'hero-dc');
+}
+function saveHero() {
+    save('hero',{badge:document.getElementById('hero-badge').value.trim(),desc:document.getElementById('hero-desc').value.trim(),btn1:document.getElementById('hero-btn1').value.trim(),btn2:document.getElementById('hero-btn2').value.trim()});
+    showMsg('hero-msg','✅ Hero saved.','ok');
+}
+
+// ── ABOUT ──────────────────────────────────────────────────────────────────
+function loadAbout() {
+    const d=get('about');
+    document.getElementById('about-heading').value=d.heading;
+    document.getElementById('about-body').value=d.body;
+    document.getElementById('about-years').value=d.years;
+    count(document.getElementById('about-body'),'about-dc');
+}
+function saveAbout() {
+    save('about',{heading:document.getElementById('about-heading').value.trim(),body:document.getElementById('about-body').value.trim(),years:document.getElementById('about-years').value.trim()});
+    updateOverview(); showMsg('about-msg','✅ About saved.','ok');
+}
+
+// ── SERVICES ───────────────────────────────────────────────────────────────
+function loadServices() {
+    const svcs=get('services'), ed=document.getElementById('svc-editor');
+    ed.innerHTML='';
+    svcs.forEach((s,i)=>{
+        const r=document.createElement('div'); r.className='svc-row';
+        r.innerHTML=`<div class="svc-num">${s.num}</div><div class="field-row"><div class="field"><label>Name</label><input type="text" id="sn${i}" value="${esc(s.title)}"></div><div class="field"><label>Description</label><input type="text" id="sd${i}" value="${esc(s.desc)}"></div></div>`;
+        ed.appendChild(r);
+    });
+}
+function saveServices() {
+    const s=get('services').map((s,i)=>({num:s.num,title:document.getElementById('sn'+i)?.value.trim()||s.title,desc:document.getElementById('sd'+i)?.value.trim()||s.desc}));
+    save('services',s); showMsg('svc-msg','✅ Services saved.','ok');
+}
+
+// ── BEHOLD ─────────────────────────────────────────────────────────────────
+const DEFAULT_BEHOLD_ID = 'vxRtAawIFxINH0EnSqBo';
+
+function loadBehold() {
+    const id = load('behold_id') || DEFAULT_BEHOLD_ID;
+    document.getElementById('behold-id').value = id;
+}
+
+function saveBehold() {
+    const id = document.getElementById('behold-id').value.trim();
+    if (!id) { showMsg('behold-msg', '⚡ Paste your Behold Feed ID.', 'err'); return; }
+    // Basic format check — Behold IDs are alphanumeric ~20 chars
+    if (!/^[a-zA-Z0-9]{10,40}$/.test(id)) {
+        showMsg('behold-msg', '⚡ That doesn't look like a valid Feed ID. Copy it directly from your Behold embed code.', 'err');
+        return;
+    }
+    save('behold_id', id);
+    showMsg('behold-msg', '✅ Behold Feed ID saved. Push Live to update your site.', 'ok');
+}
+
+// ── SLIDES ─────────────────────────────────────────────────────────────────
+let slides=[];
+function loadSlides() {
+    slides=JSON.parse(JSON.stringify(get('slides'))); renderSlides();
+}
+function renderSlides() {
+    const list=document.getElementById('slideList'), badge=document.getElementById('slide-count-badge');
+    list.innerHTML='';
+    if(badge) badge.textContent=`${slides.length} slide${slides.length!==1?'s':''}`;
+    slides.forEach((s,i)=>{
+        const item=document.createElement('div'); item.className='slide-item';
+        item.innerHTML=`<span class="drag-handle">⠿</span>
+        <img class="slide-thumb" src="${esc(s.src)}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2278%22 height=%2246%22><rect fill=%22%230a0f15%22 width=%2278%22 height=%2246%22/><text x=%2239%22 y=%2227%22 text-anchor=%22middle%22 fill=%22%23333%22 font-size=%2210%22>No img</text></svg>'">
+        <div class="slide-meta">
+            <input type="text" placeholder="Filename (e.g. photo.jpg)" value="${esc(s.src)}" oninput="slides[${i}].src=this.value;updateThumb(this)">
+            <input type="text" placeholder="#Hashtag (optional)" value="${esc(s.hashtag||'')}" oninput="slides[${i}].hashtag=this.value">
+        </div>
+        <div class="slide-btns">
+            <button class="btn btn-outline btn-sm" onclick="moveSlide(${i},-1)">↑</button>
+            <button class="btn btn-outline btn-sm" onclick="moveSlide(${i},1)">↓</button>
+            <button class="btn btn-danger btn-sm" onclick="removeSlide(${i})">✕</button>
+        </div>`;
+        list.appendChild(item);
+    });
+}
+function updateThumb(input) { const t=input.closest('.slide-item').querySelector('.slide-thumb'); if(t) t.src=input.value; }
+function addSlide() { slides.push({src:'',hashtag:''}); renderSlides(); document.getElementById('slideList').lastElementChild?.scrollIntoView({behavior:'smooth'}); }
+function removeSlide(i) { if(slides.length<=1){showMsg('slides-msg','Keep at least one slide.','err');return;} if(!confirm('Remove this slide?')) return; slides.splice(i,1); renderSlides(); }
+function moveSlide(i,d) { const n=i+d; if(n<0||n>=slides.length) return; [slides[i],slides[n]]=[slides[n],slides[i]]; renderSlides(); }
+function resetSlides() { if(!confirm('Reset to defaults?')) return; slides=JSON.parse(JSON.stringify(DEFAULTS.slides)); renderSlides(); showMsg('slides-msg','Reset — click Save to apply.','info'); }
+function saveSlides() {
+    const valid=slides.filter(s=>s.src.trim());
+    if(!valid.length){showMsg('slides-msg','Add at least one slide.','err');return;}
+    save('slides',valid); slides=valid; renderSlides(); updateOverview();
+    showMsg('slides-msg',`✅ ${valid.length} slides saved.`,'ok');
+}
+
+// ── CONTACT ────────────────────────────────────────────────────────────────
+function loadContact() {
+    const d=get('contact');
+    document.getElementById('contact-title').value=d.title||'Get a Quote';
+    document.getElementById('contact-submit').value=d.submit||'SEND MESSAGE';
+    document.getElementById('contact-phone').checked=d.phone!==false;
+    document.getElementById('contact-service').checked=d.service!==false;
+}
+function saveContact() {
+    save('contact',{title:document.getElementById('contact-title').value.trim(),submit:document.getElementById('contact-submit').value.trim(),phone:document.getElementById('contact-phone').checked,service:document.getElementById('contact-service').checked});
+    showMsg('contact-msg','✅ Contact form settings saved.','ok');
+}
+
+// ── EMAILJS ────────────────────────────────────────────────────────────────
+function loadEmailJS() {
+    const d=load('emailjs')||DEFAULTS.emailjs;
+    document.getElementById('ej-pub').value=d.pub||'';
+    document.getElementById('ej-svc').value=d.svc||'';
+    document.getElementById('ej-tpl').value=d.tpl||'';
+}
+function saveEmailJS() {
+    const pub=document.getElementById('ej-pub').value.trim(),svc=document.getElementById('ej-svc').value.trim(),tpl=document.getElementById('ej-tpl').value.trim();
+    if(!pub||!svc||!tpl){showMsg('email-msg','Fill in all three fields.','err');return;}
+    save('emailjs',{pub,svc,tpl}); showMsg('email-msg','✅ EmailJS config saved.','ok');
+}
+
+// ── GITHUB CONFIG ──────────────────────────────────────────────────────────
+function loadGHConfig() {
+    const d=load('gh')||{};
+    if(d.user) document.getElementById('gh-user').value=d.user;
+    if(d.repo) document.getElementById('gh-repo').value=d.repo;
+    if(d.branch) document.getElementById('gh-branch').value=d.branch;
+    if(d.token) document.getElementById('gh-token').value=d.token;
+    updateOverview();
+}
+function saveGHConfig() {
+    const user=document.getElementById('gh-user').value.trim();
+    const repo=document.getElementById('gh-repo').value.trim();
+    const branch=document.getElementById('gh-branch').value.trim()||'main';
+    const token=document.getElementById('gh-token').value.trim();
+    if(!user||!repo||!token){showMsg('gh-msg','Fill in username, repo, and token.','err');return;}
+    save('gh',{user,repo,branch,token});
+    updateOverview();
+    showMsg('gh-msg','✅ GitHub config saved! Click "Test Push Live" to verify.','ok');
+}
+
+// ── PUSH LIVE — GitHub API commit ─────────────────────────────────────────
+async function pushLive() {
+    const gh = load('gh');
+    if (!gh || !gh.user || !gh.repo || !gh.token) {
+        const go = confirm('GitHub is not configured yet. Go to the GitHub Deploy setup page?');
+        if (go) gotoPanel('deploy');
+        return;
+    }
+
+    // Show deploying status in all status elements
+    const statusEls = ['deploy-status-main','deploy-status-gh','deploy-status-overview'];
+    statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent='🔄 Generating site and pushing to GitHub…';el.className='deploy-status deploying';} });
+    ['pushBtn','pushBtn2'].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=true;b.textContent='Deploying…';}});
+
+    try {
+        // 1. Fetch the current index.html source
+        const fileRes = await fetch('index.html');
+        if (!fileRes.ok) throw new Error('Could not read index.html');
+        let html = await fileRes.text();
+
+        // 2. Bake all admin-saved data into the HTML
+        html = bakeDataIntoHTML(html);
+
+        // 3. Get the current file SHA from GitHub (needed to update the file)
+        const apiBase = `https://api.github.com/repos/${gh.user}/${gh.repo}`;
+        const headers  = { 'Authorization': `Bearer ${gh.token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' };
+
+        const shaRes = await fetch(`${apiBase}/contents/index.html?ref=${gh.branch}`, { headers });
+        let sha = null;
+        if (shaRes.ok) { const shaData = await shaRes.json(); sha = shaData.sha; }
+
+        // 4. Base64 encode the HTML and commit it
+        const encoded = btoa(unescape(encodeURIComponent(html)));
+        const commitBody = { message: `Admin update — ${new Date().toLocaleString('en-CA')}`, content: encoded, branch: gh.branch };
+        if (sha) commitBody.sha = sha;
+
+        const pushRes = await fetch(`${apiBase}/contents/index.html`, { method:'PUT', headers, body: JSON.stringify(commitBody) });
+        if (!pushRes.ok) {
+            const err = await pushRes.json();
+            throw new Error(err.message || `GitHub API ${pushRes.status}`);
+        }
+
+        // 5. Success — Netlify auto-deploys from GitHub in ~10 seconds
+        const successMsg = '✅ Pushed to GitHub! Netlify is deploying — your site will be live in about 30 seconds.';
+        statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent=successMsg;el.className='deploy-status ok';} });
+
+    } catch(err) {
+        const errMsg = `❌ Deploy failed: ${err.message}. Check your GitHub token and repo name in the Deploy settings.`;
+        statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent=errMsg;el.className='deploy-status err';} });
+    } finally {
+        ['pushBtn','pushBtn2'].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=false;b.textContent=id==='pushBtn'?'🚀 Push Live':'🚀 Push Live to Netlify';}});
+    }
+}
+
+// ── BAKE DATA INTO HTML ────────────────────────────────────────────────────
+function bakeDataIntoHTML(html) {
+    // Hero
+    const hero = get('hero');
+    html = html.replace(/(<div class="hero-label">)[^<]*(<\/div>)/, `$1${hero.badge}$2`);
+
+    // About years in badge
+    const about = get('about');
+    if (about.years) html = html.replace(/\d+ YEARS INDUSTRIAL EXPERIENCE/, `${about.years} YEARS INDUSTRIAL EXPERIENCE`);
+
+    // Fallback slides baked into loadFallbackCarousel
+    const slidesData = get('slides');
+    const slidesJS = 'buildCarousel([\n' +
+        slidesData.map(s => `        {src:${JSON.stringify(s.src)},hashtag:${JSON.stringify(s.hashtag||'')}}`).join(',\n') +
+        '\n    ]);';
+    html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slidesJS);
+
+    // Behold Feed ID
+    const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
+    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
+
+    // EmailJS keys
+    const ej = load('emailjs') || DEFAULTS.emailjs;
+    if(ej.pub) html = html.replace(/EMAILJS_PUBLIC_KEY\s*=\s*'[^']*'/, `EMAILJS_PUBLIC_KEY  = '${ej.pub}'`);
+    if(ej.svc) html = html.replace(/EMAILJS_SERVICE_ID\s*=\s*'[^']*'/, `EMAILJS_SERVICE_ID  = '${ej.svc}'`);
+    if(ej.tpl) html = html.replace(/EMAILJS_TEMPLATE_ID\s*=\s*'[^']*'/, `EMAILJS_TEMPLATE_ID = '${ej.tpl}'`);
+
+    return html;
+}
+
+// ── PASSWORD ───────────────────────────────────────────────────────────────
+async function changePW() {
+    const cur=document.getElementById('pw-cur').value;
+    const nw=document.getElementById('pw-new').value;
+    const conf=document.getElementById('pw-confirm').value;
+    const curHash=await hashPW(cur);
+    const stored=await getPWHash();
+    if(curHash!==stored){showMsg('pw-msg','Current password incorrect.','err');return;}
+    if(nw.length<8){showMsg('pw-msg','New password must be 8+ characters.','err');return;}
+    if(nw!==conf){showMsg('pw-msg','Passwords do not match.','err');return;}
+    const newHash=await hashPW(nw);
+    localStorage.setItem('weldel_admin_pwh',newHash);
+    localStorage.removeItem('weldel_admin_pw'); // remove old plaintext if any
+    ['pw-cur','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
+    showMsg('pw-msg','✅ Password updated!','ok');
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function showMsg(id,text,type) {
+    const el=document.getElementById(id); if(!el) return;
+    el.textContent=text; el.className='msg '+type;
+    setTimeout(()=>{el.className='msg';el.textContent='';},5500);
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
