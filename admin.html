@@ -269,14 +269,26 @@
                 <div class="page-sub">Manage your Instagram carousel feed and fallback slides.</div>
 
                 <div class="card">
-                    <div class="card-title">📷 Behold Instagram Feed</div>
-                    <div class="field">
-                        <label>Behold Feed ID</label>
-                        <input type="text" id="behold-id" placeholder="e.g. vxRtAawIFxINH0EnSqBo">
-                        <div class="field-hint">Found in your Behold embed code: <code style="color:#a0cfff">&lt;behold-widget feed-id="YOUR_ID"&gt;</code> — get it at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a>. Change it here anytime and click Save &amp; Push Live.</div>
+                    <div class="card-title">📷 Carousel Source</div>
+                    <div class="toggle-row">
+                        <div>
+                            <div class="toggle-label">Use Instagram Feed (Behold)</div>
+                            <div class="toggle-sub" id="carousel-source-sub">Carousel pulls live photos from your Instagram via Behold</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="use-instagram" checked onchange="toggleCarouselSource()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div id="behold-fields" style="margin-top:1rem">
+                        <div class="field">
+                            <label>Behold Feed ID</label>
+                            <input type="text" id="behold-id" placeholder="e.g. vxRtAawIFxINH0EnSqBo">
+                            <div class="field-hint">Found in your Behold embed code: <code style="color:#a0cfff">&lt;behold-widget feed-id="YOUR_ID"&gt;</code> — get it at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a>.</div>
+                        </div>
                     </div>
                     <div class="btn-row">
-                        <button class="btn btn-gold" onclick="saveBehold()">💾 Save Feed ID</button>
+                        <button class="btn btn-gold" onclick="saveBehold()">💾 Save</button>
                         <button class="btn btn-blue" onclick="saveBehold();pushLive()">💾 Save &amp; Push Live</button>
                     </div>
                     <div class="msg" id="behold-msg"></div>
@@ -611,18 +623,44 @@ const DEFAULT_BEHOLD_ID = 'vxRtAawIFxINH0EnSqBo';
 function loadBehold() {
     const id = load('behold_id') || DEFAULT_BEHOLD_ID;
     document.getElementById('behold-id').value = id;
+    const useIG = load('use_instagram') !== false; // default ON
+    document.getElementById('use-instagram').checked = useIG;
+    updateCarouselSourceUI(useIG);
+}
+
+function toggleCarouselSource() {
+    const useIG = document.getElementById('use-instagram').checked;
+    updateCarouselSourceUI(useIG);
+}
+
+function updateCarouselSourceUI(useIG) {
+    const fields = document.getElementById('behold-fields');
+    const sub    = document.getElementById('carousel-source-sub');
+    if (useIG) {
+        fields.style.display = 'block';
+        sub.textContent = 'Carousel pulls live photos from your Instagram via Behold';
+    } else {
+        fields.style.display = 'none';
+        sub.textContent = 'Carousel shows your local fallback slides below';
+    }
 }
 
 function saveBehold() {
-    const id = document.getElementById('behold-id').value.trim();
-    if (!id) { showMsg('behold-msg', '⚡ Paste your Behold Feed ID.', 'err'); return; }
-    // Basic format check — Behold IDs are alphanumeric ~20 chars
-    if (!/^[a-zA-Z0-9]{10,40}$/.test(id)) {
-        showMsg('behold-msg', '⚡ Invalid Feed ID. Copy it directly from your Behold embed code.', 'err');
-        return;
+    const useIG = document.getElementById('use-instagram').checked;
+    save('use_instagram', useIG);
+
+    if (useIG) {
+        const id = document.getElementById('behold-id').value.trim();
+        if (!id) { showMsg('behold-msg', '⚡ Paste your Behold Feed ID.', 'err'); return; }
+        if (!/^[a-zA-Z0-9]{10,40}$/.test(id)) {
+            showMsg('behold-msg', '⚡ Invalid Feed ID. Copy it directly from your Behold embed code.', 'err');
+            return;
+        }
+        save('behold_id', id);
+        showMsg('behold-msg', '✅ Instagram feed saved. Push Live to update your site.', 'ok');
+    } else {
+        showMsg('behold-msg', '✅ Using fallback slides. Push Live to update your site.', 'ok');
     }
-    save('behold_id', id);
-    showMsg('behold-msg', '✅ Behold Feed ID saved. Push Live to update your site.', 'ok');
 }
 
 // ── SLIDES ─────────────────────────────────────────────────────────────────
@@ -779,9 +817,16 @@ function bakeDataIntoHTML(html) {
         '\n    ]);';
     html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slidesJS);
 
-    // Behold Feed ID
-    const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
-    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
+    // Behold toggle — swap loadInstagramCarousel call for loadFallbackCarousel if toggled off
+    const useIG = load('use_instagram') !== false;
+    if (!useIG) {
+        html = html.replace('loadInstagramCarousel();', 'loadFallbackCarousel(); // admin: fallback mode');
+    } else {
+        const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
+        html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
+        // Make sure Instagram mode is restored if previously set to fallback
+        html = html.replace('loadFallbackCarousel(); // admin: fallback mode', 'loadInstagramCarousel();');
+    }
 
     // EmailJS keys
     const ej = load('emailjs') || DEFAULTS.emailjs;
