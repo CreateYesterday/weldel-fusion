@@ -8,100 +8,76 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#070f14;--bg2:#0d1620;--bg3:#111c27;--border:rgba(255,255,255,0.07);--border-gold:rgba(212,175,55,0.35);--gold:#D4AF37;--gold-light:#f0d060;--red:#e74c3c;--green:#27ae60;--orange:#ff8c00;--text:#fff;--text2:rgba(255,255,255,0.6);--text3:rgba(255,255,255,0.3);--font:'Montserrat',sans-serif;--font-body:'Inter',sans-serif;--radius:8px;--shadow:0 8px 32px rgba(0,0,0,.7)}
+        :root{--bg:#070f14;--bg2:#0d1620;--bg3:#111c27;--border:rgba(255,255,255,0.07);--border-gold:rgba(212,175,55,0.35);--gold:#D4AF37;--gold2:#fceea7;--blue:#2874A6;--green:#27ae60;--red:#e74c3c;--orange:#ff8c00;--text:#fff;--text2:rgba(255,255,255,.6);--text3:rgba(255,255,255,.3);--font:'Montserrat',sans-serif;--body:'Inter',sans-serif;--r:8px}
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+        body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh}
 
         /* LOGIN */
         #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;background-image:radial-gradient(ellipse 60% 50% at 50% 100%,rgba(212,175,55,.07) 0%,transparent 70%)}
-        .login-box{width:100%;max-width:400px;padding:3rem 2.5rem;background:var(--bg2);border:1px solid var(--border-gold);border-radius:12px;box-shadow:0 0 80px rgba(212,175,55,.07),var(--shadow);text-align:center}
-        .login-logo{font-family:var(--font);font-size:2rem;font-weight:900;margin-bottom:.2rem;letter-spacing:-1px}
+        .login-box{width:100%;max-width:390px;padding:2.75rem 2.5rem;background:var(--bg2);border:1px solid var(--border-gold);border-radius:12px;text-align:center}
+        .login-logo{font-family:var(--font);font-size:1.8rem;font-weight:900;margin-bottom:.2rem}
         .login-logo span{background:linear-gradient(to right,#d4af37,#fceea7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-        .login-sub{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:2.5rem;font-family:var(--font)}
-        .login-box label{display:block;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.5rem;font-family:var(--font);font-weight:700}
-        .login-box input[type=password]{width:100%;padding:14px 16px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:6px;font-family:var(--font-body);font-size:1rem;margin-bottom:1.25rem;transition:border-color .2s}
-        .login-box input[type=password]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.12)}
-        .login-btn{width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:6px;font-family:var(--font);font-size:.85rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .1s}
-        .login-btn:hover{background:var(--gold-light)}.login-btn:active{transform:scale(.98)}
-        .login-btn:disabled{opacity:.5;cursor:not-allowed}
-        .login-error{color:#e74c3c;font-size:.82rem;margin-top:.75rem;display:none;font-family:var(--font)}
+        .login-sub{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:2rem;font-family:var(--font)}
+        .login-box label{display:block;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.4rem;font-family:var(--font);font-weight:700}
+        .login-box input[type=password]{width:100%;padding:13px 15px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:6px;font-size:1rem;margin-bottom:1.1rem;transition:border-color .2s;font-family:var(--body)}
+        .login-box input[type=password]:focus{outline:none;border-color:var(--gold)}
+        .login-btn{width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:6px;font-family:var(--font);font-size:.83rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+        .login-btn:hover{background:var(--gold2)}.login-btn:disabled{opacity:.5;cursor:not-allowed}
+        #loginError{color:var(--red);font-size:.8rem;margin-top:.7rem;min-height:1rem;font-family:var(--font)}
         .login-hint{display:none}
-        .lockout-bar{height:4px;background:rgba(231,76,60,.15);border-radius:2px;margin-top:1rem;overflow:hidden;display:none}
-        .lockout-fill{height:100%;background:var(--red);border-radius:2px;transition:width .3s}
 
         /* TOPBAR */
         #dashboard{display:none;min-height:100vh}
-        .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.5)}
-        .topbar-brand{font-family:var(--font);font-size:1rem;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:.5rem}
+        .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+        .topbar-brand{font-family:var(--font);font-size:1rem;font-weight:900;display:flex;align-items:center;gap:.5rem}
         .topbar-brand span{background:linear-gradient(to right,#d4af37,#fceea7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-        .topbar-pill{font-size:.65rem;font-family:var(--font);font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:.35rem}
-        .topbar-dot{width:5px;height:5px;background:#27ae60;border-radius:50%;animation:pd 2s infinite}
-        @keyframes pd{0%,100%{opacity:1}50%{opacity:.2}}
-        .topbar-right{display:flex;align-items:center;gap:.6rem}
+        .pill{font-size:.62rem;font-family:var(--font);font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:.3rem}
+        .dot{width:5px;height:5px;background:#27ae60;border-radius:50%;animation:blink 2s infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+        .topbar-right{display:flex;gap:.5rem;align-items:center}
 
         /* LAYOUT */
-        .layout{display:flex;min-height:calc(100vh - 60px)}
-        .sidebar{width:200px;background:var(--bg2);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
-        .sidebar-sep{margin:.75rem 1rem .25rem;font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--font)}
-        .nav-item{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.1rem;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;border-left:2px solid transparent;font-family:var(--font);user-select:none}
+        .layout{display:flex;min-height:calc(100vh - 58px)}
+        .sidebar{width:195px;background:var(--bg2);border-right:1px solid var(--border);padding:.75rem 0;flex-shrink:0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+        .sep{margin:.65rem 1rem .2rem;font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--font)}
+        .nav-item{display:flex;align-items:center;gap:.55rem;padding:.6rem 1rem;font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;border-left:2px solid transparent;font-family:var(--font);transition:all .15s}
         .nav-item:hover{background:rgba(255,255,255,.03);color:var(--text)}
         .nav-item.active{background:rgba(212,175,55,.07);color:var(--gold);border-left-color:var(--gold)}
-        .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
-        .main{flex:1;padding:1.75rem 2rem;overflow-y:auto;max-width:900px}
-        @media(max-width:900px){.sidebar{display:none}.main{padding:1.25rem}}
+        .ni{width:18px;text-align:center;flex-shrink:0}
+        .main{flex:1;padding:1.75rem 2rem;max-width:860px}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:1rem}}
 
         /* PANELS */
-        .panel{display:none;animation:fadeIn .2s ease}.panel.active{display:block}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-        .page-title{font-family:var(--font);font-size:1.35rem;font-weight:900;margin-bottom:.25rem;letter-spacing:-.5px}
-        .page-sub{color:var(--text2);font-size:.85rem;margin-bottom:1.75rem;line-height:1.5}
+        .panel{display:none;animation:fi .18s ease}.panel.active{display:block}
+        @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+        .page-title{font-family:var(--font);font-size:1.25rem;font-weight:900;margin-bottom:.2rem}
+        .page-sub{color:var(--text2);font-size:.82rem;margin-bottom:1.5rem;line-height:1.5}
 
         /* CARDS */
-        .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
-        .card-title{font-family:var(--font);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.4rem}
+        .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin-bottom:1.1rem}
+        .card-title{font-family:var(--font);font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
 
         /* STATS */
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.25rem}
-        .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;transition:border-color .2s}
-        .stat-card:hover{border-color:var(--border-gold)}
-        .stat-val{font-family:var(--font);font-size:1.8rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.25rem}
-        .stat-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);font-family:var(--font)}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.7rem;margin-bottom:1.1rem}
+        .stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem}
+        .stat-val{font-family:var(--font);font-size:1.7rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.2rem}
+        .stat-label{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);font-family:var(--font)}
 
-        /* FORM */
-        .field{margin-bottom:1.1rem}
-        .field label{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.4rem;font-family:var(--font)}
-        .field input,.field textarea,.field select{width:100%;padding:10px 13px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:5px;font-family:var(--font-body);font-size:.9rem;transition:border-color .2s,box-shadow .2s}
-        .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.1)}
+        /* FIELDS */
+        .field{margin-bottom:1rem}
+        .field label{display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:.35rem;font-family:var(--font)}
+        .field input,.field textarea,.field select{width:100%;padding:10px 12px;background:#050a0f;border:1px solid #1e2a38;color:#fff;border-radius:5px;font-family:var(--body);font-size:.87rem;transition:border-color .2s}
+        .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold)}
         .field textarea{resize:vertical;min-height:80px;line-height:1.5}
-        .field select option{background:#111}
-        .field input[readonly]{opacity:.5;cursor:default}
-        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-        @media(max-width:600px){.field-row{grid-template-columns:1fr}}
-        .char-count{font-size:.68rem;color:var(--text3);text-align:right;margin-top:.2rem;font-family:var(--font)}
-        .field-hint{font-size:.75rem;color:var(--text3);margin-top:.3rem;line-height:1.4}
-
-        /* BUTTONS */
-        .btn{display:inline-flex;align-items:center;gap:.35rem;padding:9px 18px;border:none;border-radius:5px;font-family:var(--font);font-size:.75rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
-        .btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed}
-        .btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:var(--gold-light)}
-        .btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--border-gold);color:var(--gold)}
-        .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(231,76,60,.25)}.btn-danger:hover{background:rgba(231,76,60,.1);border-color:var(--red)}
-        .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#2ecc71}
-        .btn-blue{background:#2874A6;color:#fff}.btn-blue:hover{background:#3498db}
-        .btn-sm{padding:6px 12px;font-size:.68rem}
-        .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
-
-        /* MESSAGES */
-        .msg{padding:11px 15px;border-radius:5px;font-size:.78rem;font-family:var(--font);letter-spacing:.8px;margin-top:.75rem;display:none;line-height:1.5}
-        .msg.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
-        .msg.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
-        .msg.info{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
+        .field input[readonly]{opacity:.5}
+        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+        @media(max-width:560px){.field-row{grid-template-columns:1fr}}
+        .hint{font-size:.7rem;color:var(--text3);margin-top:.3rem;line-height:1.4}
 
         /* TOGGLES */
-        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)}
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--border)}
         .toggle-row:last-child{border-bottom:none}
-        .toggle-label{font-size:.85rem;font-weight:600;line-height:1.4}
-        .toggle-sub{font-size:.72rem;color:var(--text3);margin-top:.15rem}
+        .tl{font-size:.83rem;font-weight:600}.ts{font-size:.7rem;color:var(--text3);margin-top:.1rem}
         .switch{position:relative;width:42px;height:23px;flex-shrink:0}
         .switch input{opacity:0;width:0;height:0}
         .slider{position:absolute;inset:0;background:#1e2a38;border-radius:23px;cursor:pointer;transition:.3s}
@@ -109,42 +85,62 @@
         input:checked+.slider{background:var(--gold)}
         input:checked+.slider::before{transform:translateX(19px)}
 
+        /* BUTTONS */
+        .btn{display:inline-flex;align-items:center;gap:.35rem;padding:8px 16px;border:none;border-radius:5px;font-family:var(--font);font-size:.72rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
+        .btn:disabled{opacity:.5;cursor:not-allowed}
+        .btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:var(--gold2)}
+        .btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:#3498db}
+        .btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-outline:hover{color:var(--gold);border-color:var(--border-gold)}
+        .btn-red{background:transparent;color:var(--red);border:1px solid rgba(231,76,60,.25)}.btn-red:hover{background:rgba(231,76,60,.1)}
+        .btn-sm{padding:5px 11px;font-size:.67rem}
+        .btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem}
+
+        /* MESSAGES */
+        .msg{padding:10px 14px;border-radius:5px;font-size:.76rem;font-family:var(--font);margin-top:.7rem;display:none;line-height:1.5}
+        .msg.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
+        .msg.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
+        .msg.info{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
+
+        /* DEPLOY */
+        .deploy-msg{padding:12px 15px;border-radius:6px;font-family:var(--font);font-size:.77rem;margin-top:.7rem;display:none;line-height:1.6}
+        .deploy-msg.going{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
+        .deploy-msg.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
+        .deploy-msg.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
+
         /* SLIDES */
-        .slide-list{display:flex;flex-direction:column;gap:.6rem}
-        .slide-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;display:flex;gap:.9rem;align-items:center;transition:border-color .15s}
+        .slide-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.6rem}
+        .slide-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.75rem;display:flex;gap:.75rem;align-items:center;transition:border-color .15s}
         .slide-item:hover{border-color:var(--border-gold)}
-        .slide-thumb{width:78px;height:46px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;background:#0a0f15}
-        .slide-meta{flex:1;min-width:0}
-        .slide-meta input{width:100%;background:#050a0f;border:1px solid #1e2a38;color:#fff;padding:6px 10px;border-radius:4px;font-size:.82rem;font-family:var(--font-body);transition:border-color .2s}
-        .slide-meta input:focus{outline:none;border-color:var(--gold)}
-        .slide-meta input+input{margin-top:.35rem}
-        .slide-btns{display:flex;gap:.3rem;flex-shrink:0}
-        .drag-handle{color:var(--text3);cursor:grab;font-size:1.1rem;padding:0 .15rem;user-select:none;flex-shrink:0}
-        .add-area{border:2px dashed rgba(212,175,55,.25);border-radius:6px;padding:1.5rem;text-align:center;color:var(--text3);cursor:pointer;transition:all .2s;font-family:var(--font);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;margin-top:.6rem}
-        .add-area:hover{background:rgba(212,175,55,.03);color:var(--text2);border-color:rgba(212,175,55,.4)}
+        .slide-thumb{width:72px;height:44px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;background:#0a0f15}
+        .slide-fields{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+        .slide-fields input{width:100%;background:#050a0f;border:1px solid #1e2a38;color:#fff;padding:5px 9px;border-radius:4px;font-size:.8rem;font-family:var(--body)}
+        .slide-fields input:focus{outline:none;border-color:var(--gold)}
+        .slide-btns{display:flex;gap:.25rem;flex-shrink:0}
+
+        /* UPLOAD ZONE */
+        .upload-zone{border:2px dashed rgba(212,175,55,.25);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+        .upload-zone:hover{background:rgba(212,175,55,.04);border-color:rgba(212,175,55,.45)}
+        .upload-zone.dragover{background:rgba(212,175,55,.08);border-color:var(--gold)}
+        .upload-zone-icon{font-size:2rem;margin-bottom:.5rem}
+        .upload-zone-text{font-family:var(--font);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2)}
+        .upload-zone-sub{font-size:.68rem;color:var(--text3);margin-top:.25rem}
+        .upload-progress{margin-top:.75rem;display:none}
+        .upload-progress-bar{height:4px;background:rgba(212,175,55,.15);border-radius:2px;overflow:hidden}
+        .upload-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;width:0%}
+        .upload-progress-text{font-size:.72rem;color:var(--gold);font-family:var(--font);margin-top:.35rem;text-align:center}
 
         /* SERVICES */
-        .svc-row{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:.6rem;transition:border-color .15s}
-        .svc-row:hover{border-color:var(--border-gold)}
-        .svc-num{font-family:var(--font);font-size:1.4rem;font-weight:900;color:rgba(212,175,55,.18);margin-bottom:.5rem}
+        .svc-block{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.9rem;margin-bottom:.6rem}
+        .svc-block:hover{border-color:var(--border-gold)}
+        .svc-num{font-family:var(--font);font-size:1.3rem;font-weight:900;color:rgba(212,175,55,.18);margin-bottom:.4rem}
 
-        /* GITHUB DEPLOY */
-        .deploy-status{padding:14px 18px;border-radius:6px;font-family:var(--font);font-size:.8rem;letter-spacing:1px;margin-top:1rem;display:none;line-height:1.6}
-        .deploy-status.deploying{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);color:var(--gold);display:block}
-        .deploy-status.ok{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60;display:block}
-        .deploy-status.err{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c;display:block}
-        .setup-note{background:rgba(255,140,0,.05);border:1px solid rgba(255,140,0,.18);border-radius:6px;padding:1rem 1.1rem;margin-bottom:1.1rem}
-        .setup-note p{font-size:.8rem;color:rgba(255,200,100,.75);line-height:1.8}
-        .setup-note strong{color:var(--orange)}
-        .setup-note a{color:var(--orange);text-decoration:underline}
-        .code-box{background:#050a0f;border:1px solid #1e2a38;border-radius:5px;padding:.85rem 1rem;font-family:monospace;font-size:.78rem;color:#a0cfff;margin-top:.5rem;white-space:pre-wrap;user-select:all;line-height:1.6}
-        .step-list{display:flex;flex-direction:column;gap:.75rem}
-        .step{display:flex;gap:1rem;align-items:flex-start;padding:.9rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px}
-        .step-n{width:28px;height:28px;border-radius:50%;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:.75rem;font-weight:800;color:var(--gold);flex-shrink:0;margin-top:.05rem}
-        .step-body{flex:1}.step-title{font-family:var(--font);font-size:.82rem;font-weight:700;margin-bottom:.2rem}
-        .step-desc{font-size:.78rem;color:var(--text2);line-height:1.5}
-        .gh-configured{background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.25);border-radius:6px;padding:1rem;display:none;margin-bottom:1rem}
-        .gh-configured p{font-size:.82rem;color:#27ae60;font-family:var(--font)}
+        /* DEPLOY STEPS */
+        .step-list{display:flex;flex-direction:column;gap:.6rem}
+        .step{display:flex;gap:.85rem;align-items:flex-start;padding:.85rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px}
+        .step-n{width:26px;height:26px;border-radius:50%;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:.7rem;font-weight:800;color:var(--gold);flex-shrink:0;margin-top:.05rem}
+        .step-title{font-family:var(--font);font-size:.79rem;font-weight:700;margin-bottom:.15rem}
+        .step-desc{font-size:.75rem;color:var(--text2);line-height:1.5}
+        code{color:#a0cfff;font-family:monospace}
     </style>
 </head>
 <body>
@@ -154,40 +150,39 @@
     <div class="login-box">
         <div class="login-logo">WelDel <span>Admin</span></div>
         <div class="login-sub">Secure Dashboard Access</div>
-        <label for="adminPass">Password</label>
-        <input type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password">
-        <button class="login-btn" id="loginBtn" onclick="tryLogin()">UNLOCK DASHBOARD</button>
-        <div class="login-error" id="loginError"></div>
-        <div class="lockout-bar" id="lockoutBar"><div class="lockout-fill" id="lockoutFill"></div></div>
-        <div class="login-hint" id="loginHint">Default password: <strong>weldel2026</strong></div>
+        <label for="pwInput">Password</label>
+        <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password">
+        <button class="login-btn" id="loginBtn" onclick="doLogin()">Unlock Dashboard</button>
+        <div id="loginError"></div>
+        <div class="login-hint">Default: weldel2026</div>
     </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard">
     <div class="topbar">
-        <div class="topbar-brand">WelDel <span>Admin</span> <span class="topbar-pill"><span class="topbar-dot"></span>Live</span></div>
+        <div class="topbar-brand">WelDel <span>Admin</span> <span class="pill"><span class="dot"></span>Live</span></div>
         <div class="topbar-right">
-            <a href="index.html" target="_blank" class="btn btn-outline btn-sm" style="text-decoration:none">↗ View Site</a>
+            <a href="index.html" target="_blank" class="btn btn-outline btn-sm" style="text-decoration:none">↗ Site</a>
             <button class="btn btn-blue btn-sm" onclick="pushLive()" id="pushBtn">🚀 Push Live</button>
-            <button class="btn btn-outline btn-sm" onclick="logout()" style="color:#e74c3c;border-color:rgba(231,76,60,.25)">Logout</button>
+            <button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>
         </div>
     </div>
 
     <div class="layout">
         <aside class="sidebar">
-            <div class="sidebar-sep">Pages</div>
-            <div class="nav-item active" data-panel="overview" onclick="switchPanel(this)"><span class="nav-icon">🏠</span>Overview</div>
-            <div class="nav-item" data-panel="hero" onclick="switchPanel(this)"><span class="nav-icon">⚡</span>Hero</div>
-            <div class="nav-item" data-panel="about" onclick="switchPanel(this)"><span class="nav-icon">👷</span>About</div>
-            <div class="nav-item" data-panel="services" onclick="switchPanel(this)"><span class="nav-icon">🔧</span>Services</div>
-            <div class="nav-item" data-panel="gallery" onclick="switchPanel(this)"><span class="nav-icon">📸</span>Gallery</div>
-            <div class="nav-item" data-panel="contact" onclick="switchPanel(this)"><span class="nav-icon">📬</span>Contact</div>
-            <div class="sidebar-sep">Deploy</div>
-            <div class="nav-item" data-panel="deploy" onclick="switchPanel(this)"><span class="nav-icon">🚀</span>GitHub Deploy</div>
-            <div class="sidebar-sep">Settings</div>
-            <div class="nav-item" data-panel="email" onclick="switchPanel(this)"><span class="nav-icon">📧</span>Email Setup</div>
-            <div class="nav-item" data-panel="password" onclick="switchPanel(this)"><span class="nav-icon">🔒</span>Password</div>
+            <div class="sep">Pages</div>
+            <div class="nav-item active" data-panel="overview" onclick="nav(this)"><span class="ni">🏠</span>Overview</div>
+            <div class="nav-item" data-panel="hero" onclick="nav(this)"><span class="ni">⚡</span>Hero</div>
+            <div class="nav-item" data-panel="about" onclick="nav(this)"><span class="ni">👷</span>About</div>
+            <div class="nav-item" data-panel="services" onclick="nav(this)"><span class="ni">🔧</span>Services</div>
+            <div class="nav-item" data-panel="gallery" onclick="nav(this)"><span class="ni">📸</span>Gallery</div>
+            <div class="nav-item" data-panel="contact" onclick="nav(this)"><span class="ni">📬</span>Contact</div>
+            <div class="sep">Deploy</div>
+            <div class="nav-item" data-panel="deploy" onclick="nav(this)"><span class="ni">🚀</span>GitHub Deploy</div>
+            <div class="sep">Settings</div>
+            <div class="nav-item" data-panel="email" onclick="nav(this)"><span class="ni">📧</span>Email</div>
+            <div class="nav-item" data-panel="password" onclick="nav(this)"><span class="ni">🔒</span>Password</div>
         </aside>
 
         <main class="main">
@@ -196,30 +191,20 @@
             <div class="panel active" id="panel-overview">
                 <div class="page-title">Overview</div>
                 <div class="page-sub">Your WelDel Fusion website dashboard.</div>
-                <div id="deploy-status-overview" class="deploy-status"></div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-val" id="ov-slides">7</div><div class="stat-label">Gallery Photos</div></div>
-                    <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">Services</div></div>
-                    <div class="stat-card"><div class="stat-val" id="ov-years">27</div><div class="stat-label">Yrs Experience</div></div>
-                    <div class="stat-card"><div class="stat-val" id="ov-gh">⚙️</div><div class="stat-label">GitHub Deploy</div></div>
+                <div class="stats">
+                    <div class="stat"><div class="stat-val" id="ov-slides">7</div><div class="stat-label">Photos</div></div>
+                    <div class="stat"><div class="stat-val">5</div><div class="stat-label">Services</div></div>
+                    <div class="stat"><div class="stat-val" id="ov-years">27</div><div class="stat-label">Yrs Exp</div></div>
+                    <div class="stat"><div class="stat-val" id="ov-gh">⚙️</div><div class="stat-label">GitHub</div></div>
                 </div>
                 <div class="card">
                     <div class="card-title">🚀 Push Live</div>
-                    <p style="font-size:.85rem;color:var(--text2);margin-bottom:1rem;line-height:1.6">Make your edits in any section, save them, then click <strong style="color:var(--gold)">Push Live</strong> to deploy instantly to Netlify via GitHub. No drag and drop needed.</p>
+                    <p style="font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:.9rem">Make edits in any section, then click <strong style="color:var(--gold)">Push Live</strong> to deploy instantly to Netlify via GitHub.</p>
                     <div class="btn-row" style="margin-top:0">
-                        <button class="btn btn-blue" onclick="pushLive()" id="pushBtn2">🚀 Push Live to Netlify</button>
-                        <button class="btn btn-outline" onclick="gotoPanel('deploy')">⚙️ GitHub Setup</button>
+                        <button class="btn btn-blue" onclick="pushLive()">🚀 Push Live to Netlify</button>
+                        <button class="btn btn-outline" onclick="nav(document.querySelector('[data-panel=deploy]'))">⚙️ GitHub Setup</button>
                     </div>
-                    <div class="deploy-status" id="deploy-status-main"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">⚡ Quick Actions</div>
-                    <div class="btn-row" style="margin-top:0">
-                        <button class="btn btn-gold" onclick="gotoPanel('gallery')">Edit Gallery</button>
-                        <button class="btn btn-outline" onclick="gotoPanel('hero')">Edit Hero</button>
-                        <button class="btn btn-outline" onclick="gotoPanel('services')">Edit Services</button>
-                        <button class="btn btn-outline" onclick="gotoPanel('email')">Email Setup</button>
-                    </div>
+                    <div class="deploy-msg" id="dm-overview"></div>
                 </div>
             </div>
 
@@ -229,13 +214,16 @@
                 <div class="page-sub">Edit the main headline at the top of your site.</div>
                 <div class="card">
                     <div class="card-title">⚡ Hero Content</div>
-                    <div class="field"><label>Top Badge Text</label><input type="text" id="hero-badge" placeholder="27 YEARS INDUSTRIAL EXPERIENCE"></div>
-                    <div class="field"><label>Subtitle</label><textarea id="hero-desc" rows="3" oninput="count(this,'hero-dc')"></textarea><div class="char-count" id="hero-dc">0 chars</div></div>
+                    <div class="field"><label>Badge Text</label><input type="text" id="hero-badge"></div>
+                    <div class="field"><label>Subtitle</label><textarea id="hero-desc" rows="3"></textarea></div>
                     <div class="field-row">
-                        <div class="field"><label>Primary Button</label><input type="text" id="hero-btn1" placeholder="GET A QUOTE"></div>
-                        <div class="field"><label>Secondary Button</label><input type="text" id="hero-btn2" placeholder="OUR SERVICES"></div>
+                        <div class="field"><label>Primary Button</label><input type="text" id="hero-btn1"></div>
+                        <div class="field"><label>Secondary Button</label><input type="text" id="hero-btn2"></div>
                     </div>
-                    <div class="btn-row"><button class="btn btn-gold" onclick="saveHero()">💾 Save</button><button class="btn btn-blue" onclick="saveHero();pushLive()">💾 Save &amp; Push Live</button></div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveHero()">💾 Save</button>
+                        <button class="btn btn-blue" onclick="saveHero();pushLive()">💾 Save &amp; Push Live</button>
+                    </div>
                     <div class="msg" id="hero-msg"></div>
                 </div>
             </div>
@@ -243,13 +231,16 @@
             <!-- ABOUT -->
             <div class="panel" id="panel-about">
                 <div class="page-title">About Section</div>
-                <div class="page-sub">Edit the About text shown next to the rig photo.</div>
+                <div class="page-sub">Edit the About text next to the rig photo.</div>
                 <div class="card">
-                    <div class="card-title">👷 About Content</div>
-                    <div class="field"><label>Heading</label><input type="text" id="about-heading" placeholder="About"></div>
-                    <div class="field"><label>Body Paragraph</label><textarea id="about-body" rows="6" oninput="count(this,'about-dc')"></textarea><div class="char-count" id="about-dc">0 chars</div></div>
-                    <div class="field"><label>Years of Experience</label><input type="number" id="about-years" min="1" max="99"></div>
-                    <div class="btn-row"><button class="btn btn-gold" onclick="saveAbout()">💾 Save</button><button class="btn btn-blue" onclick="saveAbout();pushLive()">💾 Save &amp; Push Live</button></div>
+                    <div class="card-title">👷 About</div>
+                    <div class="field"><label>Heading</label><input type="text" id="about-heading"></div>
+                    <div class="field"><label>Body Text</label><textarea id="about-body" rows="5"></textarea></div>
+                    <div class="field"><label>Years of Experience</label><input type="number" id="about-years" min="1" max="99" style="max-width:120px"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveAbout()">💾 Save</button>
+                        <button class="btn btn-blue" onclick="saveAbout();pushLive()">💾 Save &amp; Push Live</button>
+                    </div>
                     <div class="msg" id="about-msg"></div>
                 </div>
             </div>
@@ -259,47 +250,71 @@
                 <div class="page-title">Services</div>
                 <div class="page-sub">Edit the five service tiles.</div>
                 <div id="svc-editor"></div>
-                <div class="btn-row"><button class="btn btn-gold" onclick="saveServices()">💾 Save</button><button class="btn btn-blue" onclick="saveServices();pushLive()">💾 Save &amp; Push Live</button></div>
+                <div class="btn-row">
+                    <button class="btn btn-gold" onclick="saveServices()">💾 Save</button>
+                    <button class="btn btn-blue" onclick="saveServices();pushLive()">💾 Save &amp; Push Live</button>
+                </div>
                 <div class="msg" id="svc-msg"></div>
             </div>
 
             <!-- GALLERY -->
             <div class="panel" id="panel-gallery">
                 <div class="page-title">Gallery / Carousel</div>
-                <div class="page-sub">Manage your Instagram carousel feed and fallback slides.</div>
+                <div class="page-sub">Upload photos directly to GitHub or use your Instagram feed.</div>
 
+                <!-- SOURCE TOGGLE -->
                 <div class="card">
                     <div class="card-title">📷 Carousel Source</div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">Use Instagram Feed (Behold)</div>
-                            <div class="toggle-sub" id="carousel-source-sub">Carousel pulls live photos from your Instagram via Behold</div>
+                            <div class="tl">Use Instagram (Behold)</div>
+                            <div class="ts" id="source-sub">Pulls live photos from your Instagram feed</div>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" id="use-instagram" checked onchange="toggleCarouselSource()">
+                            <input type="checkbox" id="use-ig" checked onchange="toggleSource()">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="behold-fields" style="margin-top:1rem">
+                    <div id="behold-section" style="margin-top:1rem">
                         <div class="field">
                             <label>Behold Feed ID</label>
                             <input type="text" id="behold-id" placeholder="e.g. vxRtAawIFxINH0EnSqBo">
-                            <div class="field-hint">Found in your Behold embed code: <code style="color:#a0cfff">&lt;behold-widget feed-id="YOUR_ID"&gt;</code> — get it at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a>.</div>
+                            <div class="hint">From your Behold embed code at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a></div>
                         </div>
                     </div>
                     <div class="btn-row">
-                        <button class="btn btn-gold" onclick="saveBehold()">💾 Save</button>
-                        <button class="btn btn-blue" onclick="saveBehold();pushLive()">💾 Save &amp; Push Live</button>
+                        <button class="btn btn-gold" onclick="saveSource()">💾 Save</button>
+                        <button class="btn btn-blue" onclick="saveSource();pushLive()">💾 Save &amp; Push Live</button>
                     </div>
-                    <div class="msg" id="behold-msg"></div>
+                    <div class="msg" id="source-msg"></div>
                 </div>
 
+                <!-- PHOTO UPLOAD -->
                 <div class="card">
-                    <div class="card-title">🖼️ Fallback Slides <span style="font-size:.7rem;color:var(--text3);font-weight:400;margin-left:.5rem" id="slide-count-badge"></span></div>
+                    <div class="card-title">📤 Upload Photos to GitHub</div>
+                    <p style="font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:1rem">Select photos from your computer — they upload straight to GitHub and appear in the carousel automatically. GitHub must be configured first.</p>
+
+                    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('photoInput').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+                        <div class="upload-zone-icon">📷</div>
+                        <div class="upload-zone-text">Click to select photos — or drag &amp; drop here</div>
+                        <div class="upload-zone-sub">JPG, PNG — uploads directly to GitHub &amp; shows in carousel</div>
+                        <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="uploadFiles(this.files)">
+                    </div>
+
+                    <div class="upload-progress" id="uploadProgress">
+                        <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div>
+                        <div class="upload-progress-text" id="uploadText">Uploading...</div>
+                    </div>
+                    <div class="msg" id="upload-msg"></div>
+                </div>
+
+                <!-- SLIDE LIST -->
+                <div class="card">
+                    <div class="card-title">🖼️ Carousel Slides <span style="font-size:.7rem;color:var(--text3);font-weight:400;margin-left:.4rem" id="slide-count"></span></div>
+                    <p style="font-size:.78rem;color:var(--text2);line-height:1.5;margin-bottom:.9rem">These show when Instagram is toggled <strong>OFF</strong>. Add uploaded photos here by filename.</p>
                     <div class="slide-list" id="slideList"></div>
-                    <div class="add-area" onclick="addSlide()">＋ Add New Slide</div>
                     <div class="btn-row">
-                        <button class="btn btn-gold" onclick="saveSlides()">💾 Save</button>
+                        <button class="btn btn-gold" onclick="saveSlides()">💾 Save Slides</button>
                         <button class="btn btn-blue" onclick="saveSlides();pushLive()">💾 Save &amp; Push Live</button>
                         <button class="btn btn-outline btn-sm" onclick="resetSlides()">Reset Defaults</button>
                     </div>
@@ -310,83 +325,74 @@
             <!-- CONTACT -->
             <div class="panel" id="panel-contact">
                 <div class="page-title">Contact Form</div>
-                <div class="page-sub">Adjust form settings. Rate limit: 5 submissions/hour per visitor.</div>
+                <div class="page-sub">Quote form settings. Rate limited to 5 submissions/hour.</div>
                 <div class="card">
                     <div class="card-title">📬 Form Settings</div>
-                    <div class="field"><label>Section Title</label><input type="text" id="contact-title" placeholder="Get a Quote"></div>
+                    <div class="field"><label>Section Title</label><input type="text" id="ct-title"></div>
                     <div class="field"><label>Destination Email (read-only)</label><input type="email" value="Buckbabcockv@gmail.com" readonly></div>
-                    <div class="field"><label>Submit Button Label</label><input type="text" id="contact-submit" placeholder="SEND MESSAGE"></div>
+                    <div class="field"><label>Submit Button Label</label><input type="text" id="ct-submit"></div>
                     <div class="toggle-row" style="margin-top:.5rem">
-                        <div><div class="toggle-label">Show Phone Field</div><div class="toggle-sub">Optional phone input</div></div>
-                        <label class="switch"><input type="checkbox" id="contact-phone" checked><span class="slider"></span></label>
+                        <div><div class="tl">Show Phone Field</div><div class="ts">Optional phone number input</div></div>
+                        <label class="switch"><input type="checkbox" id="ct-phone" checked><span class="slider"></span></label>
                     </div>
                     <div class="toggle-row">
-                        <div><div class="toggle-label">Show Service Dropdown</div><div class="toggle-sub">Let customers pick a service type</div></div>
-                        <label class="switch"><input type="checkbox" id="contact-service" checked><span class="slider"></span></label>
+                        <div><div class="tl">Show Service Dropdown</div><div class="ts">Let customers pick a service type</div></div>
+                        <label class="switch"><input type="checkbox" id="ct-service" checked><span class="slider"></span></label>
                     </div>
-                    <div class="btn-row"><button class="btn btn-gold" onclick="saveContact()">💾 Save</button><button class="btn btn-blue" onclick="saveContact();pushLive()">💾 Save &amp; Push Live</button></div>
-                    <div class="msg" id="contact-msg"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-gold" onclick="saveContact()">💾 Save</button>
+                        <button class="btn btn-blue" onclick="saveContact();pushLive()">💾 Save &amp; Push Live</button>
+                    </div>
+                    <div class="msg" id="ct-msg"></div>
                 </div>
             </div>
 
-            <!-- GITHUB DEPLOY -->
+            <!-- DEPLOY -->
             <div class="panel" id="panel-deploy">
                 <div class="page-title">GitHub Auto-Deploy</div>
-                <div class="page-sub">Connect GitHub so every save pushes live to Netlify automatically — no drag and drop ever.</div>
-
-                <div class="gh-configured" id="gh-configured-badge">
-                    <p>✅ GitHub is connected. Your site deploys automatically when you click <strong>Push Live</strong>.</p>
-                </div>
-
+                <div class="page-sub">Connect GitHub so Push Live and photo uploads work instantly.</div>
                 <div class="card">
-                    <div class="card-title">📋 One-Time Setup (10 minutes)</div>
+                    <div class="card-title">📋 Setup Steps</div>
                     <div class="step-list">
-                        <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <a href="https://github.com" target="_blank" style="color:var(--orange)">github.com</a> → Sign up free with your email.</div></div></div>
-                        <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">Create a new repository</div><div class="step-desc">Click <strong>New repository</strong> → name it <code style="color:#a0cfff">weldel-fusion</code> → set to <strong>Public</strong> → click Create.</div></div></div>
-                        <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">Upload your site files to GitHub</div><div class="step-desc">In your new repo → click <strong>uploading an existing file</strong> → drag all your files (index.html, admin.html, logo.png, rig.jpg, all .jpg photos, netlify.toml) → click Commit.</div></div></div>
-                        <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">Connect Netlify to GitHub</div><div class="step-desc">In Netlify → <strong>Add new site → Import from Git → GitHub</strong> → pick your <code style="color:#a0cfff">weldel-fusion</code> repo → Deploy. Your domain connects automatically.</div></div></div>
-                        <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Create a GitHub Personal Access Token</div><div class="step-desc">GitHub → Settings → Developer settings → <strong>Personal access tokens → Fine-grained tokens → Generate new</strong>.<br>Set: Repository access → <strong>weldel-fusion only</strong>. Permissions → Contents → <strong>Read and Write</strong>. Copy the token — you only see it once.</div></div></div>
-                        <div class="step"><div class="step-n">6</div><div class="step-body"><div class="step-title">Enter your details below and Save</div><div class="step-desc">Paste your GitHub username, repo name, and token below. From now on, click <strong>Push Live</strong> to deploy instantly.</div></div></div>
+                        <div class="step"><div class="step-n">1</div><div><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <a href="https://github.com" target="_blank" style="color:var(--orange)">github.com</a> and sign up free.</div></div></div>
+                        <div class="step"><div class="step-n">2</div><div><div class="step-title">Create repo <code>weldel-fusion</code></div><div class="step-desc">New repository → Public → Create.</div></div></div>
+                        <div class="step"><div class="step-n">3</div><div><div class="step-title">Upload all site files to GitHub</div><div class="step-desc">Upload index.html, admin.html, netlify.toml, and all .jpg/.png photos.</div></div></div>
+                        <div class="step"><div class="step-n">4</div><div><div class="step-title">Connect Netlify to GitHub</div><div class="step-desc">Netlify → Add new site → Import from Git → pick your repo.</div></div></div>
+                        <div class="step"><div class="step-n">5</div><div><div class="step-title">Create a Personal Access Token</div><div class="step-desc">GitHub → Settings → Developer settings → Fine-grained tokens → Generate new. Give Contents Read+Write on your repo only. Copy the token.</div></div></div>
+                        <div class="step"><div class="step-n">6</div><div><div class="step-title">Paste your details below and Save</div><div class="step-desc">Push Live and photo uploads will work from then on.</div></div></div>
                     </div>
                 </div>
-
                 <div class="card">
                     <div class="card-title">🔑 GitHub Credentials</div>
-                    <div class="setup-note">
-                        <p>Your token is stored <strong>only in your browser</strong> (localStorage). It never leaves your device except when making a deploy commit to GitHub. Use a Fine-grained token scoped only to this repo for maximum security.</p>
-                    </div>
                     <div class="field-row">
                         <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" placeholder="e.g. BuckBabcock"></div>
-                        <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="e.g. weldel-fusion"></div>
+                        <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="weldel-fusion"></div>
                     </div>
-                    <div class="field"><label>Branch</label><input type="text" id="gh-branch" placeholder="main" value="main"></div>
+                    <div class="field"><label>Branch</label><input type="text" id="gh-branch" placeholder="main"></div>
                     <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
                     <div class="btn-row">
-                        <button class="btn btn-gold" onclick="saveGHConfig()">💾 Save GitHub Config</button>
+                        <button class="btn btn-gold" onclick="saveGH()">💾 Save Config</button>
                         <button class="btn btn-blue" onclick="pushLive()">🚀 Test Push Live</button>
                     </div>
                     <div class="msg" id="gh-msg"></div>
-                    <div class="deploy-status" id="deploy-status-gh"></div>
+                    <div class="deploy-msg" id="dm-deploy"></div>
                 </div>
             </div>
 
-            <!-- EMAIL SETUP -->
+            <!-- EMAIL -->
             <div class="panel" id="panel-email">
                 <div class="page-title">Email Setup</div>
-                <div class="page-sub">EmailJS credentials for the quote form.</div>
+                <div class="page-sub">EmailJS credentials — already configured with your real keys.</div>
                 <div class="card">
-                    <div class="card-title">📧 EmailJS Config</div>
-                    <div class="setup-note">
-                        <p><strong>Already configured</strong> with your real keys. Update here if you ever need to change them.</p>
-                    </div>
+                    <div class="card-title">📧 EmailJS Keys</div>
                     <div class="field-row">
-                        <div class="field"><label>Public Key</label><input type="text" id="ej-pub" placeholder="Public key"></div>
-                        <div class="field"><label>Service ID</label><input type="text" id="ej-svc" placeholder="service_..."></div>
+                        <div class="field"><label>Public Key</label><input type="text" id="ej-pub"></div>
+                        <div class="field"><label>Service ID</label><input type="text" id="ej-svc"></div>
                     </div>
-                    <div class="field"><label>Template ID</label><input type="text" id="ej-tpl" placeholder="template_..."></div>
+                    <div class="field"><label>Template ID</label><input type="text" id="ej-tpl"></div>
                     <div class="field"><label>Destination Email</label><input type="email" value="Buckbabcockv@gmail.com" readonly></div>
-                    <div class="btn-row"><button class="btn btn-gold" onclick="saveEmailJS()">💾 Save</button></div>
-                    <div class="msg" id="email-msg"></div>
+                    <div class="btn-row"><button class="btn btn-gold" onclick="saveEJ()">💾 Save</button></div>
+                    <div class="msg" id="ej-msg"></div>
                 </div>
             </div>
 
@@ -394,11 +400,11 @@
             <div class="panel" id="panel-password">
                 <div class="page-title">Change Password</div>
                 <div class="page-sub">Update your admin login password.</div>
-                <div class="card" style="max-width:400px">
-                    <div class="card-title">🔒 Update Password</div>
-                    <div class="field"><label>Current Password</label><input type="password" id="pw-cur" placeholder="Current password"></div>
-                    <div class="field"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 8 characters"></div>
-                    <div class="field"><label>Confirm New Password</label><input type="password" id="pw-confirm" placeholder="Repeat new password"></div>
+                <div class="card" style="max-width:380px">
+                    <div class="card-title">🔒 Password</div>
+                    <div class="field"><label>Current Password</label><input type="password" id="pw-cur"></div>
+                    <div class="field"><label>New Password (min 8 chars)</label><input type="password" id="pw-new"></div>
+                    <div class="field"><label>Confirm New Password</label><input type="password" id="pw-conf"></div>
                     <div class="btn-row"><button class="btn btn-gold" onclick="changePW()">🔒 Update Password</button></div>
                     <div class="msg" id="pw-msg"></div>
                 </div>
@@ -409,126 +415,95 @@
 </div>
 
 <script>
-// ── SECURITY — Login lockout after 5 failed attempts ──────────────────────
-const LOCKOUT_KEY     = 'weldel_lockout';
-const LOCKOUT_MAX     = 5;
-const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+// ─── CONSTANTS ────────────────────────────────────────────────────────────
+var PW_KEY      = 'weldel_admin_pw';
+var DEFAULT_PW  = 'weldel2026';
+var LOCKOUT_KEY = 'weldel_lockout';
+var LOCKOUT_MAX = 5;
+var LOCKOUT_MS  = 15 * 60 * 1000; // 15 minutes
 
+// ─── PASSWORD ─────────────────────────────────────────────────────────────
+function getPW() { return localStorage.getItem(PW_KEY) || DEFAULT_PW; }
+
+// ─── LOCKOUT ──────────────────────────────────────────────────────────────
 function getLockout() {
-    try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY) || '{"attempts":0,"lockedUntil":0}'); }
-    catch(e) { return {attempts:0,lockedUntil:0}; }
+    try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY)) || {attempts:0,until:0}; }
+    catch(e) { return {attempts:0,until:0}; }
 }
-function saveLockout(data) { localStorage.setItem(LOCKOUT_KEY, JSON.stringify(data)); }
-
-function isLockedOut() {
-    const d = getLockout();
-    if (d.lockedUntil && Date.now() < d.lockedUntil) return d.lockedUntil;
-    return false;
+function saveLockout(d) { localStorage.setItem(LOCKOUT_KEY, JSON.stringify(d)); }
+function isLocked() {
+    var d = getLockout();
+    return d.until && Date.now() < d.until;
 }
-
-function recordFailedAttempt() {
-    const d = getLockout();
+function recordFail() {
+    var d = getLockout();
     d.attempts = (d.attempts || 0) + 1;
-    if (d.attempts >= LOCKOUT_MAX) {
-        d.lockedUntil = Date.now() + LOCKOUT_DURATION;
-        d.attempts = 0;
-    }
+    if (d.attempts >= LOCKOUT_MAX) { d.until = Date.now() + LOCKOUT_MS; d.attempts = 0; }
     saveLockout(d);
     return d;
 }
+function clearLockout() { saveLockout({attempts:0,until:0}); }
 
-function resetLockout() { saveLockout({attempts:0,lockedUntil:0}); }
+// ─── LOGIN / LOGOUT ───────────────────────────────────────────────────────
+function doLogin() {
+    var err = document.getElementById('loginError');
+    var btn = document.getElementById('loginBtn');
+    var val = document.getElementById('pwInput').value;
 
-function updateLockoutUI() {
-    const locked = isLockedOut();
-    const btn  = document.getElementById('loginBtn');
-    const bar  = document.getElementById('lockoutBar');
-    const fill = document.getElementById('lockoutFill');
-    const err  = document.getElementById('loginError');
-
-    if (locked) {
-        const remaining = Math.ceil((locked - Date.now()) / 60000);
+    if (isLocked()) {
+        var remaining = Math.ceil((getLockout().until - Date.now()) / 60000);
+        err.textContent = 'Too many attempts. Try again in ' + remaining + ' min.';
         btn.disabled = true;
-        btn.textContent = `LOCKED — ${remaining} min`;
-        err.textContent = `Too many failed attempts. Try again in ${remaining} minute${remaining!==1?'s':''}.`;
-        err.style.display = 'block';
-        bar.style.display = 'block';
-        const pct = ((LOCKOUT_DURATION - (locked - Date.now())) / LOCKOUT_DURATION) * 100;
-        fill.style.width = pct + '%';
-        setTimeout(updateLockoutUI, 5000);
-    } else {
-        btn.disabled = false;
-        btn.textContent = 'UNLOCK DASHBOARD';
-        bar.style.display = 'none';
-        err.style.display = 'none';
+        return;
     }
-}
-
-
-// ── AUTH ───────────────────────────────────────────────────────────────────
-const DEFAULT_PW = 'weldel2026';
-
-function getPW() {
-    return localStorage.getItem('weldel_admin_pw') || DEFAULT_PW;
-}
-
-function tryLogin() {
-    if (isLockedOut()) { updateLockoutUI(); return; }
-
-    const val = document.getElementById('adminPass').value;
-    const err = document.getElementById('loginError');
-    if (!val) return;
+    if (!val) { err.textContent = 'Please enter your password.'; return; }
 
     if (val === getPW()) {
-        resetLockout();
-        sessionStorage.setItem('weldel_authed','1');
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('dashboard').style.display='block';
-        init();
+        clearLockout();
+        sessionStorage.setItem('weldel_ok', '1');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        initDashboard();
     } else {
-        const d = recordFailedAttempt();
-        const remaining = LOCKOUT_MAX - (d.attempts || 0);
-        if (isLockedOut()) {
-            updateLockoutUI();
+        var d = recordFail();
+        document.getElementById('pwInput').value = '';
+        if (isLocked()) {
+            err.textContent = 'Too many attempts. Locked for 15 minutes.';
+            btn.disabled = true;
         } else {
-            err.textContent = `Incorrect password. ${remaining} attempt${remaining!==1?'s':''} remaining before lockout.`;
-            err.style.display = 'block';
-            document.getElementById('adminPass').value = '';
-            setTimeout(()=>err.style.display='none', 4000);
+            var left = LOCKOUT_MAX - (d.attempts || 0);
+            err.textContent = 'Wrong password. ' + left + ' attempt' + (left !== 1 ? 's' : '') + ' left.';
         }
     }
 }
 
-document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
-
-function logout() { sessionStorage.removeItem('weldel_authed'); location.reload(); }
-
-// Run after DOM is fully ready
-window.addEventListener('DOMContentLoaded', function() {
-    resetLockout(); // clear any stale lockout on fresh page load
-    if (sessionStorage.getItem('weldel_authed') === '1') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        init();
-    } else {
-        updateLockoutUI();
-    }
+document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
 });
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────────
-function switchPanel(el) {
-    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-    el.classList.add('active');
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById('panel-'+el.dataset.panel).classList.add('active');
-}
-function gotoPanel(name) {
-    const el = document.querySelector(`[data-panel="${name}"]`);
-    if(el) switchPanel(el);
+function doLogout() { sessionStorage.removeItem('weldel_ok'); location.reload(); }
+
+// Auto-login if session active
+if (sessionStorage.getItem('weldel_ok') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    initDashboard();
 }
 
-// ── DATA STORE ─────────────────────────────────────────────────────────────
-const DEFAULTS = {
+// ─── NAVIGATION ───────────────────────────────────────────────────────────
+function nav(el) {
+    document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.remove('active'); });
+    el.classList.add('active');
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('panel-' + el.dataset.panel).classList.add('active');
+}
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────
+function lsGet(k) { try { return JSON.parse(localStorage.getItem('weldel_' + k)); } catch(e) { return null; } }
+function lsSet(k, v) { localStorage.setItem('weldel_' + k, JSON.stringify(v)); }
+
+// ─── DEFAULTS ─────────────────────────────────────────────────────────────
+var DEF = {
     hero:     { badge:'27 YEARS INDUSTRIAL EXPERIENCE', desc:'Expert Stick, TIG, and Aluminum welding based in Victoria, BC. Quality fabrication delivered to your doorstep.', btn1:'GET A QUOTE', btn2:'OUR SERVICES' },
     about:    { heading:'About', body:'My company specializes in custom welding projects for your home or business. If you have an idea of something you need made I can make it happen based on my 27 years of industrial welding experience. I have a home based shop or a portable welding rig to do on site fabrication.', years:'27' },
     services: [
@@ -536,333 +511,416 @@ const DEFAULTS = {
         {num:'02',title:'TIG Welding',desc:'Stainless steel, chrome, mild steel.'},
         {num:'03',title:'Aluminum',desc:'Aluminum wire feed welding.'},
         {num:'04',title:'Cutting',desc:'Plasma cutting, carbon arc gauging, oxy acetylene cutting.'},
-        {num:'05',title:'Fabrication',desc:'Precise fabrication of all metals.'},
+        {num:'05',title:'Fabrication',desc:'Precise fabrication of all metals.'}
     ],
-    slides:   [
+    slides: [
         {src:'20260201_092555.jpg',hashtag:'#CustomFabrication'},
         {src:'20260201_092703.jpg',hashtag:'#OnSiteWelding'},
         {src:'20260201_093009.jpg',hashtag:'#IndustrialFabrication'},
         {src:'20171211_161629.jpg',hashtag:'#StructuralWelding'},
         {src:'20170810_070047__1_.jpg',hashtag:'#HeavyEquipmentRepair'},
         {src:'20171211_161629__1_.jpg',hashtag:'#CustomMetalWork'},
-        {src:'20260201_092450.jpg',hashtag:'#CustomFabrication'},
+        {src:'20260201_092450.jpg',hashtag:'#CustomFabrication'}
     ],
-    contact:  { title:'Get a Quote', submit:'SEND MESSAGE', phone:true, service:true },
-    emailjs:  { pub:'-T4mq74FDF0mOq7jK', svc:'service_xne0fnb', tpl:'template_zy03sxs' },
+    contact: {title:'Get a Quote',submit:'SEND MESSAGE',phone:true,service:true},
+    emailjs: {pub:'-T4mq74FDF0mOq7jK',svc:'service_xne0fnb',tpl:'template_zy03sxs'},
+    behold:  'vxRtAawIFxINH0EnSqBo'
 };
+function getVal(k) { var v = lsGet(k); return (v !== null) ? v : DEF[k]; }
 
-function load(k) { try { return JSON.parse(localStorage.getItem('weldel_'+k)); } catch(e) { return null; } }
-function save(k,v) { localStorage.setItem('weldel_'+k, JSON.stringify(v)); }
-function get(k) { return load(k) || DEFAULTS[k]; }
-
-// ── INIT ───────────────────────────────────────────────────────────────────
-function init() {
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function initDashboard() {
     loadHero(); loadAbout(); loadServices(); loadSlides();
-    loadContact(); loadEmailJS(); loadGHConfig(); loadBehold();
+    loadSource(); loadContact(); loadEJ(); loadGH();
     updateOverview();
 }
-function count(el,id) { const c=document.getElementById(id); if(c) c.textContent=el.value.length+' chars'; }
-
-// ── OVERVIEW ───────────────────────────────────────────────────────────────
 function updateOverview() {
-    const slides = get('slides');
-    document.getElementById('ov-slides').textContent = Array.isArray(slides) ? slides.length : 7;
-    document.getElementById('ov-years').textContent  = get('about').years || '27';
-    const gh = load('gh');
-    const ghOk = gh && gh.user && gh.repo && gh.token;
-    document.getElementById('ov-gh').textContent = ghOk ? '✅' : '⚙️';
-    const badge = document.getElementById('gh-configured-badge');
-    if(badge) badge.style.display = ghOk ? 'block' : 'none';
+    var sl = getVal('slides');
+    document.getElementById('ov-slides').textContent = Array.isArray(sl) ? sl.length : 7;
+    document.getElementById('ov-years').textContent  = getVal('about').years || '27';
+    var gh = lsGet('gh');
+    document.getElementById('ov-gh').textContent = (gh && gh.user && gh.token) ? 'OK' : '⚙️';
 }
 
-// ── HERO ───────────────────────────────────────────────────────────────────
+// ─── HERO ─────────────────────────────────────────────────────────────────
 function loadHero() {
-    const d=get('hero');
-    document.getElementById('hero-badge').value=d.badge;
-    document.getElementById('hero-desc').value=d.desc;
-    document.getElementById('hero-btn1').value=d.btn1;
-    document.getElementById('hero-btn2').value=d.btn2;
-    count(document.getElementById('hero-desc'),'hero-dc');
+    var d = getVal('hero');
+    document.getElementById('hero-badge').value = d.badge;
+    document.getElementById('hero-desc').value  = d.desc;
+    document.getElementById('hero-btn1').value  = d.btn1;
+    document.getElementById('hero-btn2').value  = d.btn2;
 }
 function saveHero() {
-    save('hero',{badge:document.getElementById('hero-badge').value.trim(),desc:document.getElementById('hero-desc').value.trim(),btn1:document.getElementById('hero-btn1').value.trim(),btn2:document.getElementById('hero-btn2').value.trim()});
-    showMsg('hero-msg','✅ Hero saved.','ok');
+    lsSet('hero', {badge:document.getElementById('hero-badge').value.trim(), desc:document.getElementById('hero-desc').value.trim(), btn1:document.getElementById('hero-btn1').value.trim(), btn2:document.getElementById('hero-btn2').value.trim()});
+    showMsg('hero-msg', 'Hero saved.', 'ok');
 }
 
-// ── ABOUT ──────────────────────────────────────────────────────────────────
+// ─── ABOUT ────────────────────────────────────────────────────────────────
 function loadAbout() {
-    const d=get('about');
-    document.getElementById('about-heading').value=d.heading;
-    document.getElementById('about-body').value=d.body;
-    document.getElementById('about-years').value=d.years;
-    count(document.getElementById('about-body'),'about-dc');
+    var d = getVal('about');
+    document.getElementById('about-heading').value = d.heading;
+    document.getElementById('about-body').value    = d.body;
+    document.getElementById('about-years').value   = d.years;
 }
 function saveAbout() {
-    save('about',{heading:document.getElementById('about-heading').value.trim(),body:document.getElementById('about-body').value.trim(),years:document.getElementById('about-years').value.trim()});
-    updateOverview(); showMsg('about-msg','✅ About saved.','ok');
+    lsSet('about', {heading:document.getElementById('about-heading').value.trim(), body:document.getElementById('about-body').value.trim(), years:document.getElementById('about-years').value.trim()});
+    updateOverview(); showMsg('about-msg', 'About saved.', 'ok');
 }
 
-// ── SERVICES ───────────────────────────────────────────────────────────────
+// ─── SERVICES ─────────────────────────────────────────────────────────────
 function loadServices() {
-    const svcs=get('services'), ed=document.getElementById('svc-editor');
-    ed.innerHTML='';
-    svcs.forEach((s,i)=>{
-        const r=document.createElement('div'); r.className='svc-row';
-        r.innerHTML=`<div class="svc-num">${s.num}</div><div class="field-row"><div class="field"><label>Name</label><input type="text" id="sn${i}" value="${esc(s.title)}"></div><div class="field"><label>Description</label><input type="text" id="sd${i}" value="${esc(s.desc)}"></div></div>`;
-        ed.appendChild(r);
+    var svcs = getVal('services');
+    var ed = document.getElementById('svc-editor');
+    ed.innerHTML = '';
+    svcs.forEach(function(s, i) {
+        var d = document.createElement('div');
+        d.className = 'svc-block';
+        d.innerHTML = '<div class="svc-num">' + s.num + '</div><div class="field-row"><div class="field"><label>Name</label><input type="text" id="sn' + i + '" value="' + esc(s.title) + '"></div><div class="field"><label>Description</label><input type="text" id="sd' + i + '" value="' + esc(s.desc) + '"></div></div>';
+        ed.appendChild(d);
     });
 }
 function saveServices() {
-    const s=get('services').map((s,i)=>({num:s.num,title:document.getElementById('sn'+i)?.value.trim()||s.title,desc:document.getElementById('sd'+i)?.value.trim()||s.desc}));
-    save('services',s); showMsg('svc-msg','✅ Services saved.','ok');
+    var svcs = getVal('services').map(function(s, i) {
+        return {num:s.num, title:(document.getElementById('sn'+i)||{value:s.title}).value.trim(), desc:(document.getElementById('sd'+i)||{value:s.desc}).value.trim()};
+    });
+    lsSet('services', svcs); showMsg('svc-msg', 'Services saved.', 'ok');
 }
 
-// ── BEHOLD ─────────────────────────────────────────────────────────────────
-const DEFAULT_BEHOLD_ID = 'vxRtAawIFxINH0EnSqBo';
-
-function loadBehold() {
-    const id = load('behold_id') || DEFAULT_BEHOLD_ID;
-    document.getElementById('behold-id').value = id;
-    const useIG = load('use_instagram') !== false; // default ON
-    document.getElementById('use-instagram').checked = useIG;
-    updateCarouselSourceUI(useIG);
+// ─── GALLERY SOURCE ───────────────────────────────────────────────────────
+function loadSource() {
+    var useIG = lsGet('use_ig');
+    if (useIG === null) useIG = true;
+    document.getElementById('use-ig').checked = useIG;
+    document.getElementById('behold-id').value = lsGet('behold_id') || DEF.behold;
+    applySourceUI(useIG);
 }
-
-function toggleCarouselSource() {
-    const useIG = document.getElementById('use-instagram').checked;
-    updateCarouselSourceUI(useIG);
+function toggleSource() { applySourceUI(document.getElementById('use-ig').checked); }
+function applySourceUI(useIG) {
+    document.getElementById('behold-section').style.display = useIG ? 'block' : 'none';
+    document.getElementById('source-sub').textContent = useIG ? 'Pulls live photos from your Instagram feed' : 'Shows local photos uploaded to GitHub';
 }
-
-function updateCarouselSourceUI(useIG) {
-    const fields = document.getElementById('behold-fields');
-    const sub    = document.getElementById('carousel-source-sub');
+function saveSource() {
+    var useIG = document.getElementById('use-ig').checked;
+    // Save to both keys so index.html picks it up immediately without a Push Live
+    lsSet('use_ig', useIG);
+    localStorage.setItem('weldel_use_instagram', String(useIG));
     if (useIG) {
-        fields.style.display = 'block';
-        sub.textContent = 'Carousel pulls live photos from your Instagram via Behold';
-    } else {
-        fields.style.display = 'none';
-        sub.textContent = 'Carousel shows your local fallback slides below';
+        var id = document.getElementById('behold-id').value.trim();
+        if (!id) { showMsg('source-msg', 'Enter your Behold Feed ID.', 'err'); return; }
+        lsSet('behold_id', id);
     }
+    showMsg('source-msg', 'Carousel source saved. Reload the site to see the change.', 'ok');
 }
 
-function saveBehold() {
-    const useIG = document.getElementById('use-instagram').checked;
-    save('use_instagram', useIG);
-
-    if (useIG) {
-        const id = document.getElementById('behold-id').value.trim();
-        if (!id) { showMsg('behold-msg', '⚡ Paste your Behold Feed ID.', 'err'); return; }
-        if (!/^[a-zA-Z0-9]{10,40}$/.test(id)) {
-            showMsg('behold-msg', '⚡ Invalid Feed ID. Copy it directly from your Behold embed code.', 'err');
-            return;
-        }
-        save('behold_id', id);
-        showMsg('behold-msg', '✅ Instagram feed saved. Push Live to update your site.', 'ok');
-    } else {
-        showMsg('behold-msg', '✅ Using fallback slides. Push Live to update your site.', 'ok');
-    }
-}
-
-// ── SLIDES ─────────────────────────────────────────────────────────────────
-let slides=[];
-function loadSlides() {
-    slides=JSON.parse(JSON.stringify(get('slides'))); renderSlides();
-}
+// ─── SLIDES ───────────────────────────────────────────────────────────────
+var slides = [];
+function loadSlides() { slides = JSON.parse(JSON.stringify(getVal('slides'))); renderSlides(); }
 function renderSlides() {
-    const list=document.getElementById('slideList'), badge=document.getElementById('slide-count-badge');
-    list.innerHTML='';
-    if(badge) badge.textContent=`${slides.length} slide${slides.length!==1?'s':''}`;
-    slides.forEach((s,i)=>{
-        const item=document.createElement('div'); item.className='slide-item';
-        item.innerHTML=`<span class="drag-handle">⠿</span>
-        <img class="slide-thumb" src="${esc(s.src)}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2278%22 height=%2246%22><rect fill=%22%230a0f15%22 width=%2278%22 height=%2246%22/><text x=%2239%22 y=%2227%22 text-anchor=%22middle%22 fill=%22%23333%22 font-size=%2210%22>No img</text></svg>'">
-        <div class="slide-meta">
-            <input type="text" placeholder="Filename (e.g. photo.jpg)" value="${esc(s.src)}" oninput="slides[${i}].src=this.value;updateThumb(this)">
-            <input type="text" placeholder="#Hashtag (optional)" value="${esc(s.hashtag||'')}" oninput="slides[${i}].hashtag=this.value">
-        </div>
-        <div class="slide-btns">
-            <button class="btn btn-outline btn-sm" onclick="moveSlide(${i},-1)">↑</button>
-            <button class="btn btn-outline btn-sm" onclick="moveSlide(${i},1)">↓</button>
-            <button class="btn btn-danger btn-sm" onclick="removeSlide(${i})">✕</button>
-        </div>`;
+    var list = document.getElementById('slideList');
+    var badge = document.getElementById('slide-count');
+    list.innerHTML = '';
+    if (badge) badge.textContent = slides.length + ' slide' + (slides.length !== 1 ? 's' : '');
+    slides.forEach(function(s, i) {
+        var item = document.createElement('div');
+        item.className = 'slide-item';
+        item.innerHTML = '<img class="slide-thumb" src="' + esc(s.src) + '" alt="" onerror="this.style.background=\'#1a2030\'">'
+            + '<div class="slide-fields">'
+            + '<input type="text" placeholder="Filename (e.g. photo.jpg)" value="' + esc(s.src) + '" data-i="' + i + '" data-f="src" oninput="slideEdit(this)">'
+            + '<input type="text" placeholder="#Hashtag (optional)" value="' + esc(s.hashtag||'') + '" data-i="' + i + '" data-f="hashtag" oninput="slideEdit(this)">'
+            + '</div>'
+            + '<div class="slide-btns">'
+            + '<button class="btn btn-outline btn-sm" onclick="moveSlide(' + i + ',-1)">↑</button>'
+            + '<button class="btn btn-outline btn-sm" onclick="moveSlide(' + i + ',1)">↓</button>'
+            + '<button class="btn btn-red btn-sm" onclick="removeSlide(' + i + ')">✕</button>'
+            + '</div>';
         list.appendChild(item);
     });
 }
-function updateThumb(input) { const t=input.closest('.slide-item').querySelector('.slide-thumb'); if(t) t.src=input.value; }
-function addSlide() { slides.push({src:'',hashtag:''}); renderSlides(); document.getElementById('slideList').lastElementChild?.scrollIntoView({behavior:'smooth'}); }
-function removeSlide(i) { if(slides.length<=1){showMsg('slides-msg','Keep at least one slide.','err');return;} if(!confirm('Remove this slide?')) return; slides.splice(i,1); renderSlides(); }
-function moveSlide(i,d) { const n=i+d; if(n<0||n>=slides.length) return; [slides[i],slides[n]]=[slides[n],slides[i]]; renderSlides(); }
-function resetSlides() { if(!confirm('Reset to defaults?')) return; slides=JSON.parse(JSON.stringify(DEFAULTS.slides)); renderSlides(); showMsg('slides-msg','Reset — click Save to apply.','info'); }
+function slideEdit(el) {
+    var i = parseInt(el.dataset.i), f = el.dataset.f;
+    slides[i][f] = el.value;
+    if (f === 'src') { var t = el.closest('.slide-item').querySelector('.slide-thumb'); if (t) t.src = el.value; }
+}
+function removeSlide(i) {
+    if (slides.length <= 1) { showMsg('slides-msg','Keep at least one slide.','err'); return; }
+    if (!confirm('Remove this slide?')) return;
+    slides.splice(i, 1); renderSlides();
+}
+function moveSlide(i, d) {
+    var n = i + d;
+    if (n < 0 || n >= slides.length) return;
+    var tmp = slides[i]; slides[i] = slides[n]; slides[n] = tmp; renderSlides();
+}
+function resetSlides() {
+    if (!confirm('Reset to default slides?')) return;
+    slides = JSON.parse(JSON.stringify(DEF.slides)); renderSlides();
+    showMsg('slides-msg','Reset done. Click Save to apply.','info');
+}
 function saveSlides() {
-    const valid=slides.filter(s=>s.src.trim());
-    if(!valid.length){showMsg('slides-msg','Add at least one slide.','err');return;}
-    save('slides',valid); slides=valid; renderSlides(); updateOverview();
-    showMsg('slides-msg',`✅ ${valid.length} slides saved.`,'ok');
+    var valid = slides.filter(function(s) { return s.src.trim(); });
+    if (!valid.length) { showMsg('slides-msg','Add at least one slide.','err'); return; }
+    lsSet('slides', valid); slides = valid; renderSlides(); updateOverview();
+    showMsg('slides-msg', valid.length + ' slides saved.', 'ok');
 }
 
-// ── CONTACT ────────────────────────────────────────────────────────────────
-function loadContact() {
-    const d=get('contact');
-    document.getElementById('contact-title').value=d.title||'Get a Quote';
-    document.getElementById('contact-submit').value=d.submit||'SEND MESSAGE';
-    document.getElementById('contact-phone').checked=d.phone!==false;
-    document.getElementById('contact-service').checked=d.service!==false;
-}
-function saveContact() {
-    save('contact',{title:document.getElementById('contact-title').value.trim(),submit:document.getElementById('contact-submit').value.trim(),phone:document.getElementById('contact-phone').checked,service:document.getElementById('contact-service').checked});
-    showMsg('contact-msg','✅ Contact form settings saved.','ok');
+// ─── PHOTO UPLOAD TO GITHUB ───────────────────────────────────────────────
+function dragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
+function dragLeave(e) { document.getElementById('uploadZone').classList.remove('dragover'); }
+function dropFiles(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('dragover');
+    uploadFiles(e.dataTransfer.files);
 }
 
-// ── EMAILJS ────────────────────────────────────────────────────────────────
-function loadEmailJS() {
-    const d=load('emailjs')||DEFAULTS.emailjs;
-    document.getElementById('ej-pub').value=d.pub||'';
-    document.getElementById('ej-svc').value=d.svc||'';
-    document.getElementById('ej-tpl').value=d.tpl||'';
-}
-function saveEmailJS() {
-    const pub=document.getElementById('ej-pub').value.trim(),svc=document.getElementById('ej-svc').value.trim(),tpl=document.getElementById('ej-tpl').value.trim();
-    if(!pub||!svc||!tpl){showMsg('email-msg','Fill in all three fields.','err');return;}
-    save('emailjs',{pub,svc,tpl}); showMsg('email-msg','✅ EmailJS config saved.','ok');
-}
+async function uploadFiles(files) {
+    files = Array.from(files);
+    if (!files.length) return;
 
-// ── GITHUB CONFIG ──────────────────────────────────────────────────────────
-function loadGHConfig() {
-    const d=load('gh')||{};
-    if(d.user) document.getElementById('gh-user').value=d.user;
-    if(d.repo) document.getElementById('gh-repo').value=d.repo;
-    if(d.branch) document.getElementById('gh-branch').value=d.branch;
-    if(d.token) document.getElementById('gh-token').value=d.token;
-    updateOverview();
-}
-function saveGHConfig() {
-    const user=document.getElementById('gh-user').value.trim();
-    const repo=document.getElementById('gh-repo').value.trim();
-    const branch=document.getElementById('gh-branch').value.trim()||'main';
-    const token=document.getElementById('gh-token').value.trim();
-    if(!user||!repo||!token){showMsg('gh-msg','Fill in username, repo, and token.','err');return;}
-    save('gh',{user,repo,branch,token});
-    updateOverview();
-    showMsg('gh-msg','✅ GitHub config saved! Click "Test Push Live" to verify.','ok');
-}
-
-// ── PUSH LIVE — GitHub API commit ─────────────────────────────────────────
-async function pushLive() {
-    const gh = load('gh');
+    var gh = lsGet('gh');
     if (!gh || !gh.user || !gh.repo || !gh.token) {
-        const go = confirm('GitHub is not configured yet. Go to the GitHub Deploy setup page?');
-        if (go) gotoPanel('deploy');
+        showMsg('upload-msg', 'Set up GitHub credentials in the GitHub Deploy section first.', 'err');
         return;
     }
 
-    // Show deploying status in all status elements
-    const statusEls = ['deploy-status-main','deploy-status-gh','deploy-status-overview'];
-    statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent='🔄 Generating site and pushing to GitHub…';el.className='deploy-status deploying';} });
-    ['pushBtn','pushBtn2'].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=true;b.textContent='Deploying…';}});
+    var progress = document.getElementById('uploadProgress');
+    var fill     = document.getElementById('uploadFill');
+    var text     = document.getElementById('uploadText');
+    progress.style.display = 'block';
 
-    try {
-        // 1. Fetch the current index.html source
-        const fileRes = await fetch('index.html');
-        if (!fileRes.ok) throw new Error('Could not read index.html');
-        let html = await fileRes.text();
+    var apiBase = 'https://api.github.com/repos/' + gh.user + '/' + gh.repo;
+    var headers = {
+        'Authorization': 'Bearer ' + gh.token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28'
+    };
+    var branch  = gh.branch || 'main';
+    var uploaded = [];
+    var failed   = [];
 
-        // 2. Bake all admin-saved data into the HTML
-        html = bakeDataIntoHTML(html);
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var pct  = Math.round(((i) / files.length) * 100);
+        fill.style.width = pct + '%';
+        text.textContent = 'Uploading ' + (i + 1) + ' of ' + files.length + ': ' + file.name;
 
-        // 3. Get the current file SHA from GitHub (needed to update the file)
-        const apiBase = `https://api.github.com/repos/${gh.user}/${gh.repo}`;
-        const headers  = { 'Authorization': `Bearer ${gh.token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' };
+        try {
+            // Read file as base64
+            var b64 = await readFileAsBase64(file);
 
-        const shaRes = await fetch(`${apiBase}/contents/index.html?ref=${gh.branch}`, { headers });
-        let sha = null;
-        if (shaRes.ok) { const shaData = await shaRes.json(); sha = shaData.sha; }
+            // Check if file already exists (to get SHA for update)
+            var sha = null;
+            try {
+                var chkRes = await fetch(apiBase + '/contents/' + file.name + '?ref=' + branch, {headers: headers});
+                if (chkRes.ok) { var chkData = await chkRes.json(); sha = chkData.sha; }
+            } catch(e) {}
 
-        // 4. Base64 encode the HTML and commit it
-        const encoded = btoa(unescape(encodeURIComponent(html)));
-        const commitBody = { message: `Admin update — ${new Date().toLocaleString('en-CA')}`, content: encoded, branch: gh.branch };
-        if (sha) commitBody.sha = sha;
+            // Upload to GitHub
+            var body = {
+                message: 'Upload photo: ' + file.name,
+                content: b64,
+                branch:  branch
+            };
+            if (sha) body.sha = sha;
 
-        const pushRes = await fetch(`${apiBase}/contents/index.html`, { method:'PUT', headers, body: JSON.stringify(commitBody) });
-        if (!pushRes.ok) {
-            const err = await pushRes.json();
-            throw new Error(err.message || `GitHub API ${pushRes.status}`);
+            var upRes = await fetch(apiBase + '/contents/' + file.name, {
+                method: 'PUT', headers: headers, body: JSON.stringify(body)
+            });
+
+            if (upRes.ok) {
+                uploaded.push(file.name);
+                // Auto-add to slides list if not already there
+                var already = slides.some(function(s) { return s.src === file.name; });
+                if (!already) {
+                    slides.push({src: file.name, hashtag: ''});
+                }
+            } else {
+                var errData = await upRes.json();
+                failed.push(file.name + ' (' + (errData.message || upRes.status) + ')');
+            }
+        } catch(err) {
+            failed.push(file.name + ' (' + err.message + ')');
         }
+    }
 
-        // 5. Success — Netlify auto-deploys from GitHub in ~10 seconds
-        const successMsg = '✅ Pushed to GitHub! Netlify is deploying — your site will be live in about 30 seconds.';
-        statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent=successMsg;el.className='deploy-status ok';} });
+    fill.style.width = '100%';
+    progress.style.display = 'none';
+    document.getElementById('photoInput').value = '';
 
-    } catch(err) {
-        const errMsg = `❌ Deploy failed: ${err.message}. Check your GitHub token and repo name in the Deploy settings.`;
-        statusEls.forEach(id => { const el=document.getElementById(id); if(el){el.textContent=errMsg;el.className='deploy-status err';} });
-    } finally {
-        ['pushBtn','pushBtn2'].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=false;b.textContent=id==='pushBtn'?'🚀 Push Live':'🚀 Push Live to Netlify';}});
+    if (uploaded.length) {
+        // Save updated slides and re-render
+        lsSet('slides', slides);
+        renderSlides();
+        updateOverview();
+        showMsg('upload-msg', uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' uploaded to GitHub and added to slides! Toggle Instagram OFF to see them in the carousel.', 'ok');
+    }
+    if (failed.length) {
+        showMsg('upload-msg', 'Failed: ' + failed.join(', '), 'err');
     }
 }
 
-// ── BAKE DATA INTO HTML ────────────────────────────────────────────────────
-function bakeDataIntoHTML(html) {
-    // Hero
-    const hero = get('hero');
-    html = html.replace(/(<div class="hero-label">)[^<]*(<\/div>)/, `$1${hero.badge}$2`);
+function readFileAsBase64(file) {
+    return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            // Remove the data:image/...;base64, prefix
+            var b64 = e.target.result.split(',')[1];
+            resolve(b64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
 
-    // About years in badge
-    const about = get('about');
-    if (about.years) html = html.replace(/\d+ YEARS INDUSTRIAL EXPERIENCE/, `${about.years} YEARS INDUSTRIAL EXPERIENCE`);
+// ─── CONTACT ──────────────────────────────────────────────────────────────
+function loadContact() {
+    var d = getVal('contact');
+    document.getElementById('ct-title').value    = d.title || 'Get a Quote';
+    document.getElementById('ct-submit').value   = d.submit || 'SEND MESSAGE';
+    document.getElementById('ct-phone').checked  = d.phone !== false;
+    document.getElementById('ct-service').checked = d.service !== false;
+}
+function saveContact() {
+    lsSet('contact', {title:document.getElementById('ct-title').value.trim(), submit:document.getElementById('ct-submit').value.trim(), phone:document.getElementById('ct-phone').checked, service:document.getElementById('ct-service').checked});
+    showMsg('ct-msg', 'Contact form settings saved.', 'ok');
+}
 
-    // Fallback slides baked into loadFallbackCarousel
-    const slidesData = get('slides');
-    const slidesJS = 'buildCarousel([\n' +
-        slidesData.map(s => `        {src:${JSON.stringify(s.src)},hashtag:${JSON.stringify(s.hashtag||'')}}`).join(',\n') +
-        '\n    ]);';
-    html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slidesJS);
+// ─── EMAILJS ──────────────────────────────────────────────────────────────
+function loadEJ() {
+    var d = lsGet('emailjs') || DEF.emailjs;
+    document.getElementById('ej-pub').value = d.pub || '';
+    document.getElementById('ej-svc').value = d.svc || '';
+    document.getElementById('ej-tpl').value = d.tpl || '';
+}
+function saveEJ() {
+    var pub = document.getElementById('ej-pub').value.trim();
+    var svc = document.getElementById('ej-svc').value.trim();
+    var tpl = document.getElementById('ej-tpl').value.trim();
+    if (!pub || !svc || !tpl) { showMsg('ej-msg','Fill in all three fields.','err'); return; }
+    lsSet('emailjs', {pub:pub, svc:svc, tpl:tpl});
+    showMsg('ej-msg', 'EmailJS config saved.', 'ok');
+}
 
-    // Behold toggle + Feed ID — bake the correct setting into the HTML
-    const useIG = load('use_instagram') !== false;
-    const beholdId = load('behold_id') || DEFAULT_BEHOLD_ID;
-    // Always bake the latest Behold Feed ID
-    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, `const BEHOLD_FEED_ID = '${beholdId}'`);
-    // Bake the toggle value — inject a small script that sets localStorage on load
-    // Inject toggle into HTML using safe string concatenation
-    const tagOpen  = '<' + 'script>';
-    const tagClose = '</' + 'script>';
-    const toggleLine = "localStorage.setItem('weldel_use_instagram','" + useIG + "');";
-    const toggleScript = tagOpen + toggleLine + tagClose;
-    if (html.indexOf('weldel_use_instagram') > -1) {
-        html = html.replace(/\<script\>localStorage\.setItem\('weldel_use_instagram'[^<]*\<\/script\>/, toggleScript);
+// ─── GITHUB CONFIG ────────────────────────────────────────────────────────
+function loadGH() {
+    var d = lsGet('gh') || {};
+    document.getElementById('gh-user').value   = d.user   || '';
+    document.getElementById('gh-repo').value   = d.repo   || '';
+    document.getElementById('gh-branch').value = d.branch || 'main';
+    document.getElementById('gh-token').value  = d.token  || '';
+}
+function saveGH() {
+    var user   = document.getElementById('gh-user').value.trim();
+    var repo   = document.getElementById('gh-repo').value.trim();
+    var branch = document.getElementById('gh-branch').value.trim() || 'main';
+    var token  = document.getElementById('gh-token').value.trim();
+    if (!user || !repo || !token) { showMsg('gh-msg','Fill in username, repo, and token.','err'); return; }
+    lsSet('gh', {user:user, repo:repo, branch:branch, token:token});
+    updateOverview(); showMsg('gh-msg', 'GitHub config saved!', 'ok');
+}
+
+// ─── PUSH LIVE ────────────────────────────────────────────────────────────
+function showDeploy(text, type) {
+    ['dm-overview','dm-deploy'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) { el.textContent = text; el.className = 'deploy-msg ' + type; }
+    });
+}
+
+async function pushLive() {
+    var gh = lsGet('gh');
+    if (!gh || !gh.user || !gh.repo || !gh.token) {
+        if (confirm('GitHub is not set up yet. Go to setup?')) nav(document.querySelector('[data-panel=deploy]'));
+        return;
+    }
+    var btn = document.getElementById('pushBtn');
+    btn.disabled = true; btn.textContent = 'Deploying…';
+    showDeploy('Pushing to GitHub…', 'going');
+
+    try {
+        var res = await fetch('index.html');
+        if (!res.ok) throw new Error('Could not read index.html');
+        var html = await res.text();
+        html = bake(html);
+
+        var base    = 'https://api.github.com/repos/' + gh.user + '/' + gh.repo;
+        var branch  = gh.branch || 'main';
+        var headers = {'Authorization':'Bearer ' + gh.token, 'Accept':'application/vnd.github+json', 'Content-Type':'application/json', 'X-GitHub-Api-Version':'2022-11-28'};
+
+        var shaRes = await fetch(base + '/contents/index.html?ref=' + branch, {headers:headers});
+        var sha = null;
+        if (shaRes.ok) { sha = (await shaRes.json()).sha; }
+
+        var body = {message:'Admin update ' + new Date().toLocaleString('en-CA'), content:btoa(unescape(encodeURIComponent(html))), branch:branch};
+        if (sha) body.sha = sha;
+
+        var pushRes = await fetch(base + '/contents/index.html', {method:'PUT', headers:headers, body:JSON.stringify(body)});
+        if (!pushRes.ok) { var e = await pushRes.json(); throw new Error(e.message || 'GitHub API ' + pushRes.status); }
+
+        showDeploy('Pushed! Netlify deploying — live in ~30 seconds.', 'ok');
+    } catch(err) {
+        showDeploy('Deploy failed: ' + err.message, 'err');
+    }
+    btn.disabled = false; btn.textContent = '🚀 Push Live';
+}
+
+// ─── BAKE SETTINGS INTO HTML ──────────────────────────────────────────────
+function bake(html) {
+    // EmailJS
+    var ej = lsGet('emailjs') || DEF.emailjs;
+    if (ej.pub) html = html.replace(/EMAILJS_PUBLIC_KEY\s*=\s*'[^']*'/, "EMAILJS_PUBLIC_KEY  = '" + ej.pub + "'");
+    if (ej.svc) html = html.replace(/EMAILJS_SERVICE_ID\s*=\s*'[^']*'/, "EMAILJS_SERVICE_ID  = '" + ej.svc + "'");
+    if (ej.tpl) html = html.replace(/EMAILJS_TEMPLATE_ID\s*=\s*'[^']*'/, "EMAILJS_TEMPLATE_ID = '" + ej.tpl + "'");
+
+    // Behold Feed ID
+    var beholdId = lsGet('behold_id') || DEF.behold;
+    html = html.replace(/const BEHOLD_FEED_ID = '[^']*'/, "const BEHOLD_FEED_ID = '" + beholdId + "'");
+
+    // Instagram toggle — inject as inline script in <head>
+    var useIG = lsGet('use_ig');
+    if (useIG === null) useIG = true;
+    var inlineTag = '<' + 'script' + '>localStorage.setItem("weldel_use_instagram","' + useIG + '");<' + '/script' + '>';
+    if (html.indexOf('weldel_use_instagram') !== -1) {
+        html = html.replace(/<script>localStorage\.setItem\("weldel_use_instagram"[^<]*<\/script>/, inlineTag);
     } else {
-        html = html.replace('<' + '/head>', toggleScript + '<' + '/head>');
+        html = html.replace('</head>', inlineTag + '\n</head>');
     }
 
-    // EmailJS keys
-    const ej = load('emailjs') || DEFAULTS.emailjs;
-    if(ej.pub) html = html.replace(/EMAILJS_PUBLIC_KEY\s*=\s*'[^']*'/, `EMAILJS_PUBLIC_KEY  = '${ej.pub}'`);
-    if(ej.svc) html = html.replace(/EMAILJS_SERVICE_ID\s*=\s*'[^']*'/, `EMAILJS_SERVICE_ID  = '${ej.svc}'`);
-    if(ej.tpl) html = html.replace(/EMAILJS_TEMPLATE_ID\s*=\s*'[^']*'/, `EMAILJS_TEMPLATE_ID = '${ej.tpl}'`);
+    // Fallback slides
+    var sl = getVal('slides');
+    var slJS = 'buildCarousel([\n' + sl.map(function(s) {
+        return '        {src:' + JSON.stringify(s.src) + ',hashtag:' + JSON.stringify(s.hashtag||'') + '}';
+    }).join(',\n') + '\n    ]);';
+    html = html.replace(/buildCarousel\(\[[\s\S]*?\]\);/, slJS);
 
     return html;
 }
 
-// ── PASSWORD ───────────────────────────────────────────────────────────────
+// ─── PASSWORD CHANGE ──────────────────────────────────────────────────────
 function changePW() {
-    const cur  = document.getElementById('pw-cur').value;
-    const nw   = document.getElementById('pw-new').value;
-    const conf = document.getElementById('pw-confirm').value;
-    if (cur !== getPW()) { showMsg('pw-msg','Current password incorrect.','err'); return; }
-    if (nw.length < 8)   { showMsg('pw-msg','New password must be 8+ characters.','err'); return; }
-    if (nw !== conf)     { showMsg('pw-msg','Passwords do not match.','err'); return; }
-    localStorage.setItem('weldel_admin_pw', nw);
-    ['pw-cur','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
-    showMsg('pw-msg','✅ Password updated!','ok');
+    var cur  = document.getElementById('pw-cur').value;
+    var nw   = document.getElementById('pw-new').value;
+    var conf = document.getElementById('pw-conf').value;
+    if (cur !== getPW())  { showMsg('pw-msg', 'Current password incorrect.', 'err'); return; }
+    if (nw.length < 8)    { showMsg('pw-msg', 'New password must be 8+ characters.', 'err'); return; }
+    if (nw !== conf)       { showMsg('pw-msg', 'Passwords do not match.', 'err'); return; }
+    localStorage.setItem(PW_KEY, nw);
+    document.getElementById('pw-cur').value = '';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-conf').value = '';
+    showMsg('pw-msg', 'Password updated!', 'ok');
 }
 
-// ── HELPERS ────────────────────────────────────────────────────────────────
-function showMsg(id,text,type) {
-    const el=document.getElementById(id); if(!el) return;
-    el.textContent=text; el.className='msg '+type;
-    setTimeout(()=>{el.className='msg';el.textContent='';},5500);
+// ─── HELPERS ──────────────────────────────────────────────────────────────
+function showMsg(id, text, type) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text; el.className = 'msg ' + type;
+    setTimeout(function() { el.className = 'msg'; el.textContent = ''; }, 5500);
 }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 </script>
 </body>
 </html>

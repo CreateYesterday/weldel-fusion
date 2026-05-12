@@ -482,26 +482,50 @@ async function loadInstagramCarousel() {
         console.warn('Instagram feed unavailable, using local photos:', err.message);
         // Fallback: local project photos with hashtag labels
         buildCarousel([
-        {src:"20260201_092555.jpg",hashtag:"#CustomFabrication"},
-        {src:"20260201_092703.jpg",hashtag:"#OnSiteWelding"},
-        {src:"20260201_093009.jpg",hashtag:"#IndustrialFabrication"},
-        {src:"20171211_161629.jpg",hashtag:"#StructuralWelding"},
-        {src:"20170810_070047__1_.jpg",hashtag:"#HeavyEquipmentRepair"},
-        {src:"20171211_161629__1_.jpg",hashtag:"#CustomMetalWork"},
-        {src:"20260201_092450.jpg",hashtag:"#CustomFabrication"}
-    ]);
+            {src:'20260201_092555.jpg',  hashtag:'#CustomFabrication'},
+            {src:'20260201_092703.jpg',  hashtag:'#OnSiteWelding'},
+            {src:'20260201_093009.jpg',  hashtag:'#IndustrialFabrication'},
+            {src:'20171211_161629.jpg',  hashtag:'#StructuralWelding'},
+            {src:'20170810_070047__1_.jpg', hashtag:'#HeavyEquipmentRepair'},
+            {src:'20171211_161629__1_.jpg', hashtag:'#CustomMetalWork'},
+            {src:'20260201_092450.jpg',  hashtag:'#CustomFabrication'},
+        ]);
     }
 }
 
-// Read admin toggle — use Instagram or fallback slides
+// Standalone fallback — shows local GitHub photos
+function loadFallbackCarousel() {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem('weldel_slides')); } catch(e) {}
+    var fallback = saved && saved.length ? saved : [
+        {src:'20260201_092555.jpg',  hashtag:'#CustomFabrication'},
+        {src:'20260201_092703.jpg',  hashtag:'#OnSiteWelding'},
+        {src:'20260201_093009.jpg',  hashtag:'#IndustrialFabrication'},
+        {src:'20171211_161629.jpg',  hashtag:'#StructuralWelding'},
+        {src:'20170810_070047__1_.jpg', hashtag:'#HeavyEquipmentRepair'},
+        {src:'20171211_161629__1_.jpg', hashtag:'#CustomMetalWork'},
+        {src:'20260201_092450.jpg',  hashtag:'#CustomFabrication'},
+    ];
+    buildCarousel(fallback);
+}
+
+// Read admin toggle — checks both key names so it works locally and after Push Live
 (function() {
     try {
-        const useIG = localStorage.getItem('weldel_use_instagram');
-        // Default is Instagram (true) unless explicitly set to false
-        if (useIG === 'false') {
-            loadFallbackCarousel();
+        // weldel_use_ig      = set by admin dashboard directly (local testing)
+        // weldel_use_instagram = baked in by Push Live (live server)
+        var local  = localStorage.getItem('weldel_use_ig');
+        var baked  = localStorage.getItem('weldel_use_instagram');
+        var useIG  = true; // default: Instagram ON
+
+        if (local === 'false' || baked === 'false') {
+            useIG = false;
+        }
+
+        if (useIG) {
+            loadInstagramCarousel();
         } else {
-            loadFallbackCarousel(); // admin: fallback mode
+            loadFallbackCarousel();
         }
     } catch(e) {
         loadInstagramCarousel();
