@@ -315,20 +315,15 @@
         });
     }
 
-    // INSTAGRAM HANDLE
     const ig = loadKey('ig');
     if (ig) {
-        document.querySelectorAll('a[href*="instagram.com"]').forEach(a => {
-            a.href = `https://www.instagram.com/${ig}`;
         });
-        document.querySelectorAll('.instagram-link').forEach(a => {
             const text = a.querySelector('svg') ? a : null;
             if (text) {
                 const nodes = Array.from(a.childNodes).filter(n => n.nodeType === 3);
                 nodes.forEach(n => { n.textContent = n.textContent.replace(/@\S+/, `@${ig}`); });
             }
         });
-        document.querySelectorAll('.footer-instagram').forEach(a => {
             const nodes = Array.from(a.childNodes).filter(n => n.nodeType === 3);
             nodes.forEach(n => { if(n.textContent.trim()) n.textContent = ` Follow @${ig} on Instagram`; });
         });
@@ -356,37 +351,12 @@
 // 4. Replace the three IDs below with your real ones
 const EMAILJS_PUBLIC_KEY  = '-T4mq74FDF0mOq7jK';
 const EMAILJS_SERVICE_ID  = 'service_xne0fnb';
-const EMAILJS_TEMPLATE_ID = 'service_xne0fnb';
-// Auto-load EmailJS keys from admin dashboard if they've been saved
-(function() {
-    try {
-        const ej = JSON.parse(localStorage.getItem('weldel_emailjs')||'{}');
-        if (ej.pub)  window.EMAILJS_PUBLIC_KEY  = ej.pub;
-        if (ej.svc)  window.EMAILJS_SERVICE_ID  = ej.svc;
-        if (ej.tpl)  window.EMAILJS_TEMPLATE_ID = ej.tpl;
-    } catch(e) {}
-})();
+const EMAILJS_TEMPLATE_ID = 'template_zy03sxs';
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // ── CAROUSEL ───────────────────────────────────────────────────────────────
 // Each slide: { src: 'url', hashtag: '#CustomFabrication' }
 // Hashtag pulled from Instagram post caption automatically, or set manually below.
-
-const HASHTAG_LABELS = [
-    '#CustomFabrication',
-    '#OnSiteWelding',
-    '#IndustrialFabrication',
-    '#StructuralWelding',
-    '#HeavyEquipmentRepair',
-    '#CustomMetalWork',
-];
-
-// Parse a hashtag from Instagram caption text
-function extractHashtag(caption) {
-    if (!caption) return '';
-    const found = caption.match(/#[\w]+/);
-    return found ? found[0] : '';
-}
 
 function buildCarousel(slides) {
     const track   = document.getElementById('carouselTrack');
@@ -454,81 +424,39 @@ function buildCarousel(slides) {
     if (counter) counter.style.display = 'block';
 }
 
-// ── BEHOLD INSTAGRAM FEED ───────────────────────────────────────────────────
-const BEHOLD_FEED_ID = 'vxRtAawIFxINH0EnSqBo';
-
-async function loadInstagramCarousel() {
-    try {
-        const res = await fetch(`https://feeds.behold.so/${BEHOLD_FEED_ID}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-
-        // Behold returns an array of post objects
-        const posts = Array.isArray(data) ? data : (data.posts || []);
-        if (!posts.length) throw new Error('Empty feed');
-
-        const slides = posts.slice(0, 20).map((post, i) => {
-            // Behold field names: mediaUrl for images, thumbnailUrl for videos
-            const src = post.mediaUrl || post.thumbnailUrl || post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl;
-            // Only show hashtag if caption contains one — no caption = no label
-            const hashtag = extractHashtag(post.caption) || '';
-            return { src, hashtag };
-        }).filter(s => s.src && s.src.startsWith('http'));
-
-        if (!slides.length) throw new Error('No image URLs in feed');
-        buildCarousel(slides);
-
-    } catch (err) {
-        console.warn('Instagram feed unavailable, using local photos:', err.message);
-        // Fallback: local project photos with hashtag labels
-        buildCarousel([
-        {src:"20260201_092555.jpg",hashtag:"#CustomFabrication"},
-        {src:"20260201_092703.jpg",hashtag:"#OnSiteWelding"},
-        {src:"20260201_093009.jpg",hashtag:"#IndustrialFabrication"},
-        {src:"20171211_161629.jpg",hashtag:"#StructuralWelding"},
-        {src:"20260201_092450.jpg",hashtag:"#CustomFabrication"}
-    ]);;;;;;
-    }
-}
 
 // Standalone fallback — shows local GitHub photos
 function loadFallbackCarousel() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem('weldel_slides')); } catch(e) {}
-    var fallback = saved && saved.length ? saved : [
-        {src:'20260201_092555.jpg',  hashtag:'#CustomFabrication'},
-        {src:'20260201_092703.jpg',  hashtag:'#OnSiteWelding'},
-        {src:'20260201_093009.jpg',  hashtag:'#IndustrialFabrication'},
-        {src:'20171211_161629.jpg',  hashtag:'#StructuralWelding'},
-        {src:'20170810_070047__1_.jpg', hashtag:'#HeavyEquipmentRepair'},
-        {src:'20171211_161629__1_.jpg', hashtag:'#CustomMetalWork'},
-        {src:'20260201_092450.jpg',  hashtag:'#CustomFabrication'},
+
+    // Use full raw GitHub URLs so images always load regardless of server path
+    var BASE = 'https://raw.githubusercontent.com/createyesterday/weldel-fusion/main/';
+    var defaults = [
+        {src: BASE + '20260201_092555.jpg',     hashtag:'#CustomFabrication'},
+        {src: BASE + '20260201_092703.jpg',     hashtag:'#OnSiteWelding'},
+        {src: BASE + '20260201_093009.jpg',     hashtag:'#IndustrialFabrication'},
+        {src: BASE + '20171211_161629.jpg',     hashtag:'#StructuralWelding'},
+        {src: BASE + '20170810_070047 (1).jpg', hashtag:'#HeavyEquipmentRepair'},
+        {src: BASE + '20171211_161629 (1).jpg', hashtag:'#CustomMetalWork'},
+        {src: BASE + '20260201_092450.jpg',     hashtag:'#CustomFabrication'},
     ];
+
+    // If admin has saved custom slides, prefix any relative paths with BASE too
+    var fallback = defaults;
+    if (saved && saved.length) {
+        fallback = saved.map(function(s) {
+            var src = s.src || '';
+            if (src && !src.startsWith('http')) src = BASE + src;
+            return {src: src, hashtag: s.hashtag || ''};
+        }).filter(function(s) { return s.src; });
+    }
+
     buildCarousel(fallback);
 }
 
-// Read admin toggle — checks both key names so it works locally and after Push Live
-(function() {
-    try {
-        // weldel_use_ig      = set by admin dashboard directly (local testing)
-        // weldel_use_instagram = baked in by Push Live (live server)
-        var local  = localStorage.getItem('weldel_use_ig');
-        var baked  = localStorage.getItem('weldel_use_instagram');
-        var useIG  = true; // default: Instagram ON
-
-        if (local === 'false' || baked === 'false') {
-            useIG = false;
-        }
-
-        if (useIG) {
-            loadInstagramCarousel();
-        } else {
-            loadFallbackCarousel();
-        }
-    } catch(e) {
-        loadInstagramCarousel();
-    }
-})();
+// Load GitHub photos
+loadFallbackCarousel();
 
 // ── Quote Form — Rate Limiting + Regex Validation ─────────────────────────
 // 5 submissions per hour max, stored in localStorage

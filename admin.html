@@ -260,34 +260,7 @@
             <!-- GALLERY -->
             <div class="panel" id="panel-gallery">
                 <div class="page-title">Gallery / Carousel</div>
-                <div class="page-sub">Upload photos directly to GitHub or use your Instagram feed.</div>
-
-                <!-- SOURCE TOGGLE -->
-                <div class="card">
-                    <div class="card-title">📷 Carousel Source</div>
-                    <div class="toggle-row">
-                        <div>
-                            <div class="tl">Use Instagram (Behold)</div>
-                            <div class="ts" id="source-sub">Pulls live photos from your Instagram feed</div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="use-ig" checked onchange="toggleSource()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div id="behold-section" style="margin-top:1rem">
-                        <div class="field">
-                            <label>Behold Feed ID</label>
-                            <input type="text" id="behold-id" placeholder="e.g. vxRtAawIFxINH0EnSqBo">
-                            <div class="hint">From your Behold embed code at <a href="https://behold.so" target="_blank" style="color:var(--orange)">behold.so</a></div>
-                        </div>
-                    </div>
-                    <div class="btn-row">
-                        <button class="btn btn-gold" onclick="saveSource()">💾 Save</button>
-                        <button class="btn btn-blue" onclick="saveSource();pushLive()">💾 Save &amp; Push Live</button>
-                    </div>
-                    <div class="msg" id="source-msg"></div>
-                </div>
+                <div class="page-sub">Upload photos directly to GitHub — they show instantly in the carousel.</div>
 
                 <!-- PHOTO UPLOAD -->
                 <div class="card">
@@ -524,14 +497,14 @@ var DEF = {
     ],
     contact: {title:'Get a Quote',submit:'SEND MESSAGE',phone:true,service:true},
     emailjs: {pub:'-T4mq74FDF0mOq7jK',svc:'service_xne0fnb',tpl:'template_zy03sxs'},
-    behold:  'vxRtAawIFxINH0EnSqBo'
+
 };
 function getVal(k) { var v = lsGet(k); return (v !== null) ? v : DEF[k]; }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 function initDashboard() {
     loadHero(); loadAbout(); loadServices(); loadSlides();
-    loadSource(); loadContact(); loadEJ(); loadGH();
+    loadContact(); loadEJ(); loadGH();
     updateOverview();
 }
 function updateOverview() {
@@ -584,32 +557,6 @@ function saveServices() {
         return {num:s.num, title:(document.getElementById('sn'+i)||{value:s.title}).value.trim(), desc:(document.getElementById('sd'+i)||{value:s.desc}).value.trim()};
     });
     lsSet('services', svcs); showMsg('svc-msg', 'Services saved.', 'ok');
-}
-
-// ─── GALLERY SOURCE ───────────────────────────────────────────────────────
-function loadSource() {
-    var useIG = lsGet('use_ig');
-    if (useIG === null) useIG = true;
-    document.getElementById('use-ig').checked = useIG;
-    document.getElementById('behold-id').value = lsGet('behold_id') || DEF.behold;
-    applySourceUI(useIG);
-}
-function toggleSource() { applySourceUI(document.getElementById('use-ig').checked); }
-function applySourceUI(useIG) {
-    document.getElementById('behold-section').style.display = useIG ? 'block' : 'none';
-    document.getElementById('source-sub').textContent = useIG ? 'Pulls live photos from your Instagram feed' : 'Shows local photos uploaded to GitHub';
-}
-function saveSource() {
-    var useIG = document.getElementById('use-ig').checked;
-    // Save to both keys so index.html picks it up immediately without a Push Live
-    lsSet('use_ig', useIG);
-    localStorage.setItem('weldel_use_instagram', String(useIG));
-    if (useIG) {
-        var id = document.getElementById('behold-id').value.trim();
-        if (!id) { showMsg('source-msg', 'Enter your Behold Feed ID.', 'err'); return; }
-        lsSet('behold_id', id);
-    }
-    showMsg('source-msg', 'Carousel source saved. Reload the site to see the change.', 'ok');
 }
 
 // ─── SLIDES ───────────────────────────────────────────────────────────────
@@ -896,29 +843,6 @@ function bake(html) {
         html = html.replace("'service_xne0fnb'",    "'" + ej.svc + "'");
         html = html.replace("'template_zy03sxs'",   "'" + ej.tpl + "'");
     } catch(e) { console.warn('bake emailjs error:', e); }
-
-    try {
-        // Behold Feed ID
-        var beholdId = lsGet('behold_id') || 'vxRtAawIFxINH0EnSqBo';
-        html = html.replace("'vxRtAawIFxINH0EnSqBo'", "'" + beholdId + "'");
-    } catch(e) { console.warn('bake behold error:', e); }
-
-    try {
-        // Instagram toggle
-        var useIG = lsGet('use_ig');
-        if (useIG === null || useIG === undefined) useIG = true;
-        var tag = '<' + 'script>localStorage.setItem("weldel_use_instagram","' + useIG + '");</' + 'script>';
-        if (html.indexOf('weldel_use_instagram') !== -1) {
-            // Replace existing tag
-            var start = html.indexOf('<script>localStorage.setItem("weldel_use_instagram"');
-            if (start !== -1) {
-                var end = html.indexOf('</' + 'script>', start) + 9;
-                html = html.slice(0, start) + tag + html.slice(end);
-            }
-        } else {
-            html = html.replace('</head>', tag + '</head>');
-        }
-    } catch(e) { console.warn('bake toggle error:', e); }
 
     try {
         // Fallback slides
