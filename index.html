@@ -268,10 +268,20 @@
 
     <canvas id="sparkCanvas"></canvas>
 <script>
+// ── WELDEL DATA (BAKED BY ADMIN PUSH LIVE) ────────────────────────────────
+// Push Live in admin.html replaces this object with the latest saved settings,
+// so every visitor sees the current hero/about/services/contact text.
+window.WELDEL_DATA = /*WELDEL_DATA_START*/null/*WELDEL_DATA_END*/;
+
 // ── ADMIN DATA READER ─────────────────────────────────────────────────────
-// Reads any edits saved from admin.html and applies them live to the page
+// Reads baked data first, then any local edits, and applies them live to the page
 (function applyAdminData() {
-    function loadKey(k) { try { return JSON.parse(localStorage.getItem('weldel_'+k)); } catch(e) { return null; } }
+    function loadKey(k) {
+        // Prefer baked data (visible to all visitors)
+        if (window.WELDEL_DATA && window.WELDEL_DATA[k] !== undefined) return window.WELDEL_DATA[k];
+        // Fall back to admin's local edits (preview before Push Live)
+        try { return JSON.parse(localStorage.getItem('weldel_'+k)); } catch(e) { return null; }
+    }
 
     // HERO
     const hero = loadKey('hero');

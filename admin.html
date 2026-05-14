@@ -862,6 +862,24 @@ function bake(html) {
         }
     } catch(e) { console.warn('bake slides error:', e); }
 
+    try {
+        // Hero / About / Services / Contact — bake into WELDEL_DATA so all visitors see them
+        var data = {
+            hero:     getVal('hero'),
+            about:    getVal('about'),
+            services: getVal('services'),
+            contact:  getVal('contact')
+        };
+        var dataJSON = JSON.stringify(data);
+        // Replace whatever is currently between the markers
+        var marker = /\/\*WELDEL_DATA_START\*\/[\s\S]*?\/\*WELDEL_DATA_END\*\//;
+        if (marker.test(html)) {
+            html = html.replace(marker, '/*WELDEL_DATA_START*/' + dataJSON + '/*WELDEL_DATA_END*/');
+        } else {
+            console.warn('bake: WELDEL_DATA markers not found in HTML');
+        }
+    } catch(e) { console.warn('bake content error:', e); }
+
     return html;
 }
 
