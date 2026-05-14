@@ -699,7 +699,10 @@ async function uploadFiles(files) {
         lsSet('slides', slides);
         renderSlides();
         updateOverview();
-        showMsg('upload-msg', uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' uploaded to GitHub and added to slides! Toggle Instagram OFF to see them in the carousel.', 'ok');
+        showMsg('upload-msg', uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' uploaded to GitHub! Pushing carousel update to Netlify…', 'ok');
+        // Auto-push live so the new photos appear in the carousel on the live site
+        // (otherwise the image files exist on GitHub but index.html still references the old slides)
+        setTimeout(function() { pushLive(); }, 600);
     }
     if (failed.length) {
         showMsg('upload-msg', 'Failed: ' + failed.join(', '), 'err');
