@@ -527,9 +527,9 @@ function loadHero() {
     document.getElementById('hero-btn1').value  = d.btn1;
     document.getElementById('hero-btn2').value  = d.btn2;
 }
-function saveHero() {
+function saveHero(silent) {
     lsSet('hero', {badge:document.getElementById('hero-badge').value.trim(), desc:document.getElementById('hero-desc').value.trim(), btn1:document.getElementById('hero-btn1').value.trim(), btn2:document.getElementById('hero-btn2').value.trim()});
-    showMsg('hero-msg', 'Hero saved.', 'ok');
+    if (!silent) showMsg('hero-msg', 'Hero saved.', 'ok');
 }
 
 // ─── ABOUT ────────────────────────────────────────────────────────────────
@@ -539,9 +539,10 @@ function loadAbout() {
     document.getElementById('about-body').value    = d.body;
     document.getElementById('about-years').value   = d.years;
 }
-function saveAbout() {
+function saveAbout(silent) {
     lsSet('about', {heading:document.getElementById('about-heading').value.trim(), body:document.getElementById('about-body').value.trim(), years:document.getElementById('about-years').value.trim()});
-    updateOverview(); showMsg('about-msg', 'About saved.', 'ok');
+    updateOverview(); 
+    if (!silent) showMsg('about-msg', 'About saved.', 'ok');
 }
 
 // ─── SERVICES ─────────────────────────────────────────────────────────────
@@ -556,11 +557,12 @@ function loadServices() {
         ed.appendChild(d);
     });
 }
-function saveServices() {
+function saveServices(silent) {
     var svcs = getVal('services').map(function(s, i) {
         return {num:s.num, title:(document.getElementById('sn'+i)||{value:s.title}).value.trim(), desc:(document.getElementById('sd'+i)||{value:s.desc}).value.trim()};
     });
-    lsSet('services', svcs); showMsg('svc-msg', 'Services saved.', 'ok');
+    lsSet('services', svcs); 
+    if (!silent) showMsg('svc-msg', 'Services saved.', 'ok');
 }
 
 // ─── SLIDES ───────────────────────────────────────────────────────────────
@@ -734,9 +736,9 @@ function loadContact() {
     document.getElementById('ct-phone').checked  = d.phone !== false;
     document.getElementById('ct-service').checked = d.service !== false;
 }
-function saveContact() {
+function saveContact(silent) {
     lsSet('contact', {title:document.getElementById('ct-title').value.trim(), submit:document.getElementById('ct-submit').value.trim(), phone:document.getElementById('ct-phone').checked, service:document.getElementById('ct-service').checked});
-    showMsg('ct-msg', 'Contact form settings saved.', 'ok');
+    if (!silent) showMsg('ct-msg', 'Contact form settings saved.', 'ok');
 }
 
 // ─── EMAILJS ──────────────────────────────────────────────────────────────
@@ -806,6 +808,14 @@ function showDeploy(text, type) {
 }
 
 async function pushLive() {
+    // Automatically save all main content panels before pushing
+    try {
+        saveHero(true);
+        saveAbout(true);
+        saveServices(true);
+        saveContact(true);
+    } catch(e) { console.warn("Auto-save failed", e); }
+
     var gh = lsGet('gh');
     if (!gh || !gh.user || !gh.repo || !gh.token) {
         if (confirm('GitHub is not set up yet. Go to setup?')) nav(document.querySelector('[data-panel=deploy]'));
