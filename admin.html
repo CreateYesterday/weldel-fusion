@@ -863,6 +863,13 @@ async function pushLive() {
         showDeploy('Applying your changes…', 'going');
         var html = bake(currentHtml);
 
+        if (html === currentHtml) {
+            showDeploy('❌ Deploy cancelled: No changes detected to push.', 'err');
+            alert('No changes detected! The data you saved is identical to what is already on the website. Please change some text before pushing.');
+            btn.disabled = false; btn.textContent = '🚀 Push Live';
+            return;
+        }
+
         // Step 3: Commit the updated file back to GitHub
         showDeploy('Pushing to GitHub…', 'going');
         var encoded = btoa(unescape(encodeURIComponent(html)));
