@@ -904,14 +904,14 @@ function bake(html) {
         // Fallback slides
         var sl = lsGet('slides') || DEF.slides;
         if (!Array.isArray(sl) || !sl.length) sl = DEF.slides;
-        var slJS = 'buildCarousel([\n' + sl.map(function(s) {
+        var slStr = 'var defaults = [\n' + sl.map(function(s) {
             return '        {src:' + JSON.stringify(s.src || '') + ',hashtag:' + JSON.stringify(s.hashtag || '') + '}';
-        }).join(',\n') + '\n    ]);';
-        // Find and replace buildCarousel([...]);
-        var bcStart = html.indexOf('buildCarousel([');
+        }).join(',\n') + '\n    ];';
+        
+        var bcStart = html.indexOf('var defaults = [');
         if (bcStart !== -1) {
-            var bcEnd = html.indexOf(']);', bcStart) + 2;
-            html = html.slice(0, bcStart) + slJS + html.slice(bcEnd);
+            var bcEnd = html.indexOf('];', bcStart) + 2;
+            html = html.slice(0, bcStart) + slStr + html.slice(bcEnd);
         }
     } catch(e) { console.warn('bake slides error:', e); }
 
