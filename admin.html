@@ -342,7 +342,11 @@
                         <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="weldel-fusion"></div>
                     </div>
                     <div class="field"><label>Branch</label><input type="text" id="gh-branch" placeholder="main"></div>
-                    <div class="field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
+                    <div class="field">
+                        <label>Personal Access Token</label>
+                        <input type="password" id="gh-token" placeholder="github_pat_...">
+                        <div class="hint" style="color:var(--orange)">Must have "repo" (Contents Read/Write) scope.</div>
+                    </div>
                     <div class="btn-row">
                         <button class="btn btn-gold" onclick="saveGH()">💾 Save Config</button>
                         <button class="btn btn-blue" onclick="pushLive()">🚀 Test Push Live</button>
@@ -824,7 +828,20 @@ async function pushLive() {
         // Step 1: Fetch current index.html from GitHub directly (always fresh, no cache issues)
         showDeploy('Fetching current index.html from GitHub…', 'going');
         var shaRes = await fetch(base + '/contents/index.html?ref=' + branch + '&t=' + Date.now(), {headers: headers});
-        if (!shaRes.ok) throw new Error('Could not read index.html from GitHub. Check repo name and token.');
+        
+        // Fallback to main if branch not found
+        if (!shaRes.ok && branch !== 'main' && shaRes.status === 404) {
+            showDeploy('Branch ' + branch + ' not found. Trying main...', 'going');
+            branch = 'main';
+            shaRes = await fetch(base + '/contents/index.html?ref=' + branch + '&t=' + Date.now(), {headers: headers});
+        }
+        
+        if (!shaRes.ok) {
+            var eData = {};
+            try { eData = await shaRes.json(); } catch(e){}
+            throw new Error((eData.message || 'Check repo name and token') + ' (HTTP ' + shaRes.status + ')');
+        }
+        
         var shaData = await shaRes.json();
         var sha = shaData.sha;
         if (!sha) throw new Error('No SHA returned — check repo name and branch.');
@@ -849,13 +866,15 @@ async function pushLive() {
         var pushRes = await fetch(base + '/contents/index.html', {method: 'PUT', headers: headers, body: JSON.stringify(body)});
         if (!pushRes.ok) {
             var e = await pushRes.json();
-            throw new Error(e.message || 'GitHub API error ' + pushRes.status);
+            throw new Error((e.message || 'GitHub API error') + ' (HTTP ' + pushRes.status + ')');
         }
 
         showDeploy('✅ Pushed! Netlify is deploying — live in ~30 seconds.', 'ok');
+        lsSet('lastDeploy', {status: 'success', time: Date.now()});
 
     } catch(err) {
         showDeploy('❌ Deploy failed: ' + err.message, 'err');
+        lsSet('lastDeploy', {status: 'error', message: err.message, time: Date.now()});
     }
     btn.disabled = false; btn.textContent = '🚀 Push Live';
 }
