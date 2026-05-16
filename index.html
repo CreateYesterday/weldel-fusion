@@ -353,7 +353,7 @@ window.WELDEL_DATA = /*WELDEL_DATA_START*/{"hero":{"badge":"27 YEARS INDUSTRIAL 
 // ── EmailJS ────────────────────────────────────────────────────────────────
 // SETUP INSTRUCTIONS (one-time, free):
 // 1. Go to https://emailjs.com and create a free account
-// 2. Add Email Service → choose Gmail → connect Buckbabcockv@gmail.com
+// 2. Add Email Service → choose Gmail → connect scruffy-22@hotmail.com
 // 3. Create Email Template — use variables: {{from_name}}, {{from_email}}, {{phone}}, {{service}}, {{message}}
 // 4. Replace the three IDs below with your real ones
 const EMAILJS_PUBLIC_KEY  = '-T4mq74FDF0mOq7jK';
@@ -537,7 +537,7 @@ document.getElementById('quoteForm').addEventListener('submit', function(e) {
         phone:      phone || 'Not provided',
         service:    service || 'Not specified',
         message:    msg,
-        to_email:   'Buckbabcockv@gmail.com',
+        to_email:   'scruffy-22@hotmail.com',
     }).then(() => {
         status.textContent = '✅ Message sent! Buck will get back to you shortly.';
         status.className = 'success';
@@ -550,7 +550,7 @@ document.getElementById('quoteForm').addEventListener('submit', function(e) {
         }, 6000);
     }, err => {
         console.error('EmailJS error:', err);
-        status.textContent = '❌ Something went wrong. Email directly: Buckbabcockv@gmail.com';
+        status.textContent = '❌ Something went wrong. Email directly: scruffy-22@hotmail.com';
         status.className = 'error';
         btn.textContent = 'SEND MESSAGE';
         btn.classList.remove('btn-loading');
