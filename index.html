@@ -537,7 +537,7 @@ document.getElementById('quoteForm').addEventListener('submit', function(e) {
         message:    msg,
         to_email:   'scruffy-22@hotmail.com',
     }).then(() => {
-        status.textContent = '✅ Message sent! Buck will get back to you shortly.';
+        status.textContent = '✅ Message sent! WelDel will get back to you shortly.';
         status.className = 'success';
         btn.textContent = 'SENT ✓';
         this.reset();
@@ -597,7 +597,7 @@ const pool=Array.from({length:POOL_SIZE},()=>new P());
 function spawn(x,y,exp,mouse){pool[pIdx].init(x,y,exp,mouse);pIdx=(pIdx+1)%POOL_SIZE;}
 let lastM=0;
 document.addEventListener('mousemove',e=>{let n=Date.now();if(n-lastM>30){if(Math.random()<.5)spawn(e.clientX,e.clientY,false,true);lastM=n;}});
-document.addEventListener('click',e=>{for(let i=0;i<20;i++)spawn(e.clientX,e.clientY,true);});
+document.addEventListener('click',e=>{if(e.target.closest('#contact')||e.target.closest('a, button, input, textarea, select'))return; for(let i=0;i<20;i++)spawn(e.clientX,e.clientY,true);});
 function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<POOL_SIZE;i++){pool[i].update();pool[i].draw();}requestAnimationFrame(anim);}
 anim();
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
