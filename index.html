@@ -38,11 +38,10 @@
             --fs-h3:clamp(1rem,2.5vw,1.15rem); --fs-body:clamp(0.9rem,1.5vw,1.1rem); --fs-label:clamp(0.65rem,1.2vw,0.85rem);
         }
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background-color:var(--dark-bg);color:var(--light-text);font-family:var(--font-body);line-height:1.6;overflow-x:hidden;cursor:url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%2300ffff"/><circle cx="2" cy="2" r="1" fill="%23ffffff"/><polygon points="3,3 10,7 13,10 8,11" fill="%23a0a0a0"/><polygon points="13,10 16,13 28,30 22,32 10,18" fill="%231f1f1f"/></svg>') 2 2,auto;animation:bodyArc 5s infinite}
+        body{background-color:var(--dark-bg);color:var(--light-text);font-family:var(--font-body);line-height:1.6;overflow-x:hidden;cursor:url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%2300ffff"/><circle cx="2" cy="2" r="1" fill="%23ffffff"/><polygon points="3,3 10,7 13,10 8,11" fill="%23a0a0a0"/><polygon points="13,10 16,13 28,30 22,32 10,18" fill="%231f1f1f"/></svg>') 2 2,auto}
         a,button,summary,.btn{cursor:url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%2300ffff"/><circle cx="2" cy="2" r="1" fill="%23ffffff"/><polygon points="3,3 10,7 13,10 8,11" fill="%23a0a0a0"/><polygon points="13,10 16,13 28,30 22,32 10,18" fill="%231f1f1f"/></svg>') 2 2,pointer}
         a:hover,button:hover,summary:hover,.btn:hover{cursor:url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="3" fill="%23ff8c00"/><circle cx="2" cy="2" r="1.5" fill="%23ffffff"/><polygon points="3,3 10,7 13,10 8,11" fill="%23a0a0a0"/><polygon points="13,10 16,13 28,30 22,32 10,18" fill="%231f1f1f"/></svg>') 2 2,pointer}
         a{text-decoration:none;color:inherit}ul{list-style:none}
-        @keyframes bodyArc{0%,100%{background-color:var(--dark-bg)}34%{background-color:#121820}36%{background-color:var(--dark-bg)}67%{background-color:#1a1a1a}68%{background-color:var(--dark-bg)}81%{background-color:#101c24}83%{background-color:var(--dark-bg)}}
 
         /* HEADER */
         header{position:absolute;width:100%;padding:10px 5%;display:flex;justify-content:space-between;align-items:center;top:0;z-index:1000}
@@ -68,7 +67,7 @@
 
         /* HERO */
         .hero{background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="200" height="200" filter="url(%23n)" opacity="0.04"/></svg>'),radial-gradient(ellipse 60% 40% at 50% 100%,rgba(255,120,0,.12) 0%,transparent 70%),linear-gradient(180deg,#030608 0%,#070f14 60%,#0a1018 100%);background-size:200px 200px,cover,cover;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px 0;padding-top:80px;position:relative}
-        .hero::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="nf"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23nf)" opacity="0.1"/></svg>'),linear-gradient(45deg,rgba(0,0,0,.6) 0%,rgba(10,10,10,.8) 100%);pointer-events:none;mix-blend-mode:multiply;z-index:0}
+        .hero::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="nf"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23nf)" opacity="0.1"/></svg>'),linear-gradient(45deg,rgba(0,0,0,.6) 0%,rgba(10,10,10,.8) 100%);pointer-events:none;z-index:0}
         .hero>*{z-index:10}
         .hero-label{font-family:var(--font-main);font-size:var(--fs-label);font-weight:600;letter-spacing:3px;color:#fff;border:1px solid rgba(255,255,255,.5);padding:8px 30px;border-radius:2px;margin-bottom:25px;text-transform:uppercase}
         .hero h1{font-family:var(--font-main);font-weight:900;line-height:.95;margin-bottom:30px}
@@ -107,7 +106,7 @@
         .about-text p{margin-bottom:1.5rem;font-size:1.1rem;color:#fff;line-height:1.8}
         .about-image{perspective:1000px;position:relative}
         .about-image img{width:100%;height:auto;border-radius:8px;box-shadow:0 15px 35px rgba(0,0,0,.8);border:2px solid rgba(255,255,255,.1);transition:transform .1s ease-out,box-shadow .1s ease-out;transform-style:preserve-3d;will-change:transform}
-        .about-image::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:linear-gradient(105deg,transparent 20%,rgba(255,209,102,.4) 25%,transparent 30%);background-size:200% 200%;background-position:var(--glare-pos,100% 100%);pointer-events:none;mix-blend-mode:color-dodge;transition:background-position .1s ease-out}
+        .about-image::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.15) 25%,transparent 30%);background-size:200% 200%;background-position:var(--glare-pos,100% 100%);pointer-events:none;transition:background-position .1s ease-out}
 
         /* SERVICES */
         .services-grid-premium{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto}
@@ -594,12 +593,12 @@ class P{
     }
 }
 const pool=Array.from({length:POOL_SIZE},()=>new P());
-function spawn(x,y,exp,mouse){pool[pIdx].init(x,y,exp,mouse);pIdx=(pIdx+1)%POOL_SIZE;}
+let animReq;
+function spawn(x,y,exp,mouse){pool[pIdx].init(x,y,exp,mouse);pIdx=(pIdx+1)%POOL_SIZE;if(!animReq)animReq=requestAnimationFrame(anim);}
 let lastM=0;
 document.addEventListener('mousemove',e=>{let n=Date.now();if(n-lastM>30){if(Math.random()<.5)spawn(e.clientX,e.clientY,false,true);lastM=n;}});
 document.addEventListener('click',e=>{if(e.target.closest('#contact')||e.target.closest('a, button, input, textarea, select'))return; for(let i=0;i<20;i++)spawn(e.clientX,e.clientY,true);});
-function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<POOL_SIZE;i++){pool[i].update();pool[i].draw();}requestAnimationFrame(anim);}
-anim();
+function anim(){let a=0;ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<POOL_SIZE;i++){if(pool[i].active){pool[i].update();pool[i].draw();a++;}}if(a>0)animReq=requestAnimationFrame(anim);else animReq=null;}
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
 // ── 3D Rig Parallax ────────────────────────────────────────────────────────
