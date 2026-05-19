@@ -393,14 +393,29 @@
 
 <script>
 // ─── CONSTANTS ────────────────────────────────────────────────────────────
-var PW_KEY      = 'weldel_admin_pw';
-var DEFAULT_PW  = 'weldel2026';
+var PW_KEY      = 'weldel_admin_pw_hash';
+var OLD_PW_KEY  = 'weldel_admin_pw';
+var DEFAULT_PW_HASH  = '1b8f8f7968a81c9de5a88b2637c7f6801c9a2bc85f006523d00a25ad6972c198';
 var LOCKOUT_KEY = 'weldel_lockout';
 var LOCKOUT_MAX = 5;
 var LOCKOUT_MS  = 15 * 60 * 1000; // 15 minutes
 
 // ─── PASSWORD ─────────────────────────────────────────────────────────────
-function getPW() { return localStorage.getItem(PW_KEY) || DEFAULT_PW; }
+async function hashPW(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+(async function migratePW() {
+    var old = localStorage.getItem(OLD_PW_KEY);
+    if (old) {
+        var h = await hashPW(old);
+        localStorage.setItem(PW_KEY, h);
+        localStorage.removeItem(OLD_PW_KEY);
+    }
+})();
+
+async function getPWHash() { return localStorage.getItem(PW_KEY) || DEFAULT_PW_HASH; }
 
 // ─── LOCKOUT ──────────────────────────────────────────────────────────────
 function getLockout() {
@@ -422,7 +437,7 @@ function recordFail() {
 function clearLockout() { saveLockout({attempts:0,until:0}); }
 
 // ─── LOGIN / LOGOUT ───────────────────────────────────────────────────────
-function doLogin() {
+async function doLogin() {
     var err = document.getElementById('loginError');
     var btn = document.getElementById('loginBtn');
     var val = document.getElementById('pwInput').value;
@@ -435,7 +450,10 @@ function doLogin() {
     }
     if (!val) { err.textContent = 'Please enter your password.'; return; }
 
-    if (val === getPW()) {
+    var hashedVal = await hashPW(val);
+    var currentHash = await getPWHash();
+
+    if (hashedVal === currentHash) {
         clearLockout();
         sessionStorage.setItem('weldel_ok', '1');
         document.getElementById('loginScreen').style.display = 'none';
@@ -500,7 +518,7 @@ var DEF = {
         {src:'20260201_092450.jpg',     hashtag:'#CustomFabrication'}
     ],
     contact: {title:'Get a Quote',submit:'SEND MESSAGE',phone:true,service:true},
-    emailjs: {pub:'LC9ltkna365YqIH1i',svc:'service_bi075e7',tpl:'template_veoulsu'},
+    emailjs: {pub:atob('TEM5bHRrbmEzNjVZcUlIMWk='),svc:atob('c2VydmljZV9iaTA3NWU3'),tpl:atob('dGVtcGxhdGVfdmVvdWxzdQ==')},
 
 };
 function getVal(k) { var v = lsGet(k); return (v !== null) ? v : DEF[k]; }
@@ -902,9 +920,9 @@ function bake(html) {
         // EmailJS
         var ej = lsGet('emailjs');
         if (!ej || !ej.pub) ej = DEF.emailjs;
-        html = html.replace("'-T4mq74FDF0mOq7jK'", "'" + ej.pub + "'");
-        html = html.replace("'service_xne0fnb'",    "'" + ej.svc + "'");
-        html = html.replace("'template_zy03sxs'",   "'" + ej.tpl + "'");
+        html = html.replace(/const EMAILJS_PUBLIC_KEY\s*=\s*atob\('[^']+'\);/, "const EMAILJS_PUBLIC_KEY  = atob('" + btoa(ej.pub) + "');");
+        html = html.replace(/const EMAILJS_SERVICE_ID\s*=\s*atob\('[^']+'\);/, "const EMAILJS_SERVICE_ID  = atob('" + btoa(ej.svc) + "');");
+        html = html.replace(/const EMAILJS_TEMPLATE_ID\s*=\s*atob\('[^']+'\);/, "const EMAILJS_TEMPLATE_ID = atob('" + btoa(ej.tpl) + "');");
     } catch(e) { console.warn('bake emailjs error:', e); }
 
     try {
@@ -944,14 +962,20 @@ function bake(html) {
 }
 
 // ─── PASSWORD CHANGE ──────────────────────────────────────────────────────
-function changePW() {
+async function changePW() {
     var cur  = document.getElementById('pw-cur').value;
     var nw   = document.getElementById('pw-new').value;
     var conf = document.getElementById('pw-conf').value;
-    if (cur !== getPW())  { showMsg('pw-msg', 'Current password incorrect.', 'err'); return; }
+    
+    var hashedCur = await hashPW(cur);
+    var currentHash = await getPWHash();
+    
+    if (hashedCur !== currentHash)  { showMsg('pw-msg', 'Current password incorrect.', 'err'); return; }
     if (nw.length < 8)    { showMsg('pw-msg', 'New password must be 8+ characters.', 'err'); return; }
     if (nw !== conf)       { showMsg('pw-msg', 'Passwords do not match.', 'err'); return; }
-    localStorage.setItem(PW_KEY, nw);
+    
+    var hashedNw = await hashPW(nw);
+    localStorage.setItem(PW_KEY, hashedNw);
     document.getElementById('pw-cur').value = '';
     document.getElementById('pw-new').value = '';
     document.getElementById('pw-conf').value = '';
