@@ -437,7 +437,7 @@ function loadFallbackCarousel() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem('weldel_slides')); } catch(e) {}
 
-    // Use relative paths — Netlify serves these from its fast global CDN
+    // Use relative paths — GitHub serves these from its fast global CDN
     var defaults = [
         {src:"20260201_092555.jpg",hashtag:"#CustomFabrication"},
         {src:"20260201_092703.jpg",hashtag:"#OnSiteWelding"},
@@ -607,7 +607,17 @@ window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.heig
 // ── 3D Rig Parallax ────────────────────────────────────────────────────────
 const rigC=document.getElementById('rigScene'),rigI=document.getElementById('rigImage');
 if(rigC&&rigI){
-    rigC.addEventListener('mousemove',e=>{const r=rigC.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,rx=((y-r.height/2)/(r.height/2))*-15,ry=((x-r.width/2)/(r.width/2))*15;rigI.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;rigI.style.boxShadow=`${-ry}px ${rx}px 30px rgba(0,0,0,0.9)`;rigC.style.setProperty('--glare-pos',`${(x/r.width)*100}% ${(y/r.height)*100}%`);});
+    let rigTick=false; let rX=0, rY=0;
+    rigC.addEventListener('mousemove',e=>{
+        const r=rigC.getBoundingClientRect(); rX=e.clientX-r.left; rY=e.clientY-r.top;
+        if(!rigTick){requestAnimationFrame(()=>{
+            const rx=((rY-r.height/2)/(r.height/2))*-15,ry=((rX-r.width/2)/(r.width/2))*15;
+            rigI.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;
+            rigI.style.boxShadow=`${-ry}px ${rx}px 30px rgba(0,0,0,0.9)`;
+            rigC.style.setProperty('--glare-pos',`${(rX/r.width)*100}% ${(rY/r.height)*100}%`);
+            rigTick=false;
+        });rigTick=true;}
+    },{passive:true});
     rigC.addEventListener('mouseleave',()=>{rigI.style.transform='rotateX(0) rotateY(0) scale3d(1,1,1)';rigI.style.boxShadow='0 15px 35px rgba(0,0,0,0.8)';rigC.style.setProperty('--glare-pos','100% 100%');});
 }
 

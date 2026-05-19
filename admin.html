@@ -199,9 +199,9 @@
                 </div>
                 <div class="card">
                     <div class="card-title">🚀 Push Live</div>
-                    <p style="font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:.9rem">Make edits in any section, then click <strong style="color:var(--gold)">Push Live</strong> to deploy instantly to Netlify via GitHub.</p>
+                    <p style="font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:.9rem">Make edits in any section, then click <strong style="color:var(--gold)">Push Live</strong> to deploy instantly to GitHub Pages.</p>
                     <div class="btn-row" style="margin-top:0">
-                        <button class="btn btn-blue" onclick="pushLive()">🚀 Push Live to Netlify</button>
+                        <button class="btn btn-blue" onclick="pushLive()">🚀 Push Live to GitHub</button>
                         <button class="btn btn-outline" onclick="nav(document.querySelector('[data-panel=deploy]'))">⚙️ GitHub Setup</button>
                     </div>
                     <div class="deploy-msg" id="dm-overview"></div>
@@ -329,8 +329,8 @@
                     <div class="step-list">
                         <div class="step"><div class="step-n">1</div><div><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <a href="https://github.com" target="_blank" style="color:var(--orange)">github.com</a> and sign up free.</div></div></div>
                         <div class="step"><div class="step-n">2</div><div><div class="step-title">Create repo <code>weldel-fusion</code></div><div class="step-desc">New repository → Public → Create.</div></div></div>
-                        <div class="step"><div class="step-n">3</div><div><div class="step-title">Upload all site files to GitHub</div><div class="step-desc">Upload index.html, admin.html, netlify.toml, and all .jpg/.png photos.</div></div></div>
-                        <div class="step"><div class="step-n">4</div><div><div class="step-title">Connect Netlify to GitHub</div><div class="step-desc">Netlify → Add new site → Import from Git → pick your repo.</div></div></div>
+                        <div class="step"><div class="step-n">3</div><div><div class="step-title">Upload all site files to GitHub</div><div class="step-desc">Upload index.html, admin.html, and all .jpg/.png photos.</div></div></div>
+                        <div class="step"><div class="step-n">4</div><div><div class="step-title">Enable GitHub Pages</div><div class="step-desc">GitHub → Settings → Pages → Select 'main' branch and click Save.</div></div></div>
                         <div class="step"><div class="step-n">5</div><div><div class="step-title">Create a Personal Access Token</div><div class="step-desc">GitHub → Settings → Developer settings → Fine-grained tokens → Generate new. Give Contents Read+Write on your repo only. Copy the token.</div></div></div>
                         <div class="step"><div class="step-n">6</div><div><div class="step-title">Paste your details below and Save</div><div class="step-desc">Push Live and photo uploads will work from then on.</div></div></div>
                     </div>
@@ -723,7 +723,7 @@ async function uploadFiles(files) {
         lsSet('slides', slides);
         renderSlides();
         updateOverview();
-        showMsg('upload-msg', uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' uploaded to GitHub! Pushing carousel update to Netlify…', 'ok');
+        showMsg('upload-msg', uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' uploaded to GitHub! Pushing carousel update to GitHub…', 'ok');
         // Auto-push live so the new photos appear in the carousel on the live site
         // (otherwise the image files exist on GitHub but index.html still references the old slides)
         setTimeout(function() { pushLive(); }, 600);
@@ -904,7 +904,7 @@ async function pushLive() {
             throw new Error((e.message || 'GitHub API error') + ' (HTTP ' + pushRes.status + ')');
         }
 
-        showDeploy('✅ Pushed! Netlify is deploying — live in ~30 seconds.', 'ok');
+        showDeploy('✅ Pushed! GitHub is deploying — live in ~30 seconds.', 'ok');
         lsSet('lastDeploy', {status: 'success', time: Date.now()});
 
     } catch(err) {
