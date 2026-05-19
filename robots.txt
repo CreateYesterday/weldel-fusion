@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://weldelfusion.ca/sitemap.xml
+Sitemap: https://weldel.ca/sitemap.xml
