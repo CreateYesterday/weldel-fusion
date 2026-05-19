@@ -621,8 +621,8 @@ if(rigC&&rigI){
 
 // ── Form Spark Effects ─────────────────────────────────────────────────────
 const mCtx=document.createElement('canvas').getContext('2d');
-function caretX(el){const r=el.getBoundingClientRect(),s=window.getComputedStyle(el);mCtx.font=`${s.fontSize} ${s.fontFamily}`;const t=el.value.substring(0,el.selectionEnd||el.value.length).split('\n').pop(),tw=mCtx.measureText(t).width;return Math.min(r.left+parseFloat(s.paddingLeft)+tw+4,r.right-4);}
-function weldFx(el){if(!el)return;el.addEventListener('input',()=>{const cx=caretX(el),r=el.getBoundingClientRect(),lh=parseFloat(window.getComputedStyle(el).lineHeight)||20,lines=el.value.substring(0,el.selectionEnd||el.value.length).split('\n').length,cy=Math.min(r.top+parseFloat(window.getComputedStyle(el).paddingTop)+(lines-1)*lh+lh/2,r.bottom-4);for(let i=0;i<8;i++){spawn(cx,cy,true,false);pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vx=(Math.random()-.5)*14;pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vy=(Math.random()*-12)-3;}});}
+let wFC=new WeakMap();
+function weldFx(el){if(!el)return;let lT=0;el.addEventListener('input',()=>{let n=Date.now();if(n-lT<30)return;lT=n;let c=wFC.get(el);if(!c){const s=window.getComputedStyle(el);c={f:`${s.fontSize} ${s.fontFamily}`,pl:parseFloat(s.paddingLeft)||0,pt:parseFloat(s.paddingTop)||0,lh:parseFloat(s.lineHeight)||20};wFC.set(el,c);}const r=el.getBoundingClientRect();mCtx.font=c.f;const txt=el.value.substring(0,el.selectionEnd||el.value.length),lines=txt.split('\n'),cx=Math.min(r.left+c.pl+mCtx.measureText(lines[lines.length-1]).width+4,r.right-4),cy=Math.min(r.top+c.pt+(lines.length-1)*c.lh+c.lh/2,r.bottom-4);for(let i=0;i<4;i++){spawn(cx,cy,true,false);pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vx=(Math.random()-.5)*12;pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vy=(Math.random()*-10)-2;}});}
 weldFx(document.getElementById('weld-name'));
 weldFx(document.getElementById('weld-email'));
 weldFx(document.getElementById('weld-message'));
