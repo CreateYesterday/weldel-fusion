@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#070f14">
     <link rel="icon" type="image/png" href="logo.png">
     <title>WelDel Fusion | Custom Welding &amp; Fabrication — Victoria, BC</title>
-    <meta name="description" content="WelDel Fusion offers expert Stick, TIG, and Aluminum welding plus custom metal fabrication in Victoria, BC. 27 years of industrial experience. Mobile welding rig for on-site service. Get a free quote today.">
-    <meta name="keywords" content="welding Victoria BC, custom fabrication, TIG welding, stick welding, aluminum welding, plasma cutting, mobile welding, on-site welding, metal fabrication Victoria">
+    <meta name="description" content="WelDel Fusion offers expert Stick, TIG, and Aluminum welding plus custom metal fabrication in Victoria, Oakbay, Vancouver Island, and British Columbia. 27 years of industrial experience. Mobile welding rig for on-site service. Get a free quote today.">
+    <meta name="keywords" content="Welding Victoria, Welding Oakbay, Welding (Provicense Vancouver Island), Welding British Colombia, custom fabrication, TIG welding, stick welding, aluminum welding, plasma cutting, mobile welding, on-site welding">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://weldelfusion.ca/">
     <meta name="author" content="WelDel Fusion">
@@ -22,7 +22,7 @@
     <meta name="twitter:title" content="WelDel Fusion | Custom Welding &amp; Fabrication">
     <meta name="twitter:description" content="Expert welding &amp; fabrication in Victoria, BC. 27 years industrial experience. Mobile rig available.">
     <meta name="twitter:image" content="https://weldelfusion.ca/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"WelDel Fusion","description":"Expert Stick, TIG, and Aluminum welding plus custom metal fabrication in Victoria, BC. 27 years of industrial experience.","url":"https://weldelfusion.ca","logo":"https://weldelfusion.ca/logo.png","address":{"@type":"PostalAddress","addressLocality":"Victoria","addressRegion":"BC","addressCountry":"CA"},"areaServed":"Victoria, BC and surrounding areas","serviceType":["Stick Welding","TIG Welding","Aluminum Welding","Plasma Cutting","Metal Fabrication","On-Site Welding"],"foundingDate":"1999"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"WelDel Fusion","description":"Expert Stick, TIG, and Aluminum welding plus custom metal fabrication in Victoria, BC. 27 years of industrial experience.","url":"https://weldelfusion.ca","logo":"https://weldelfusion.ca/logo.png","address":{"@type":"PostalAddress","addressLocality":"Victoria","addressRegion":"BC","addressCountry":"CA"},"areaServed":["Victoria","Oakbay","Vancouver Island","British Columbia"],"serviceType":["Stick Welding","TIG Welding","Aluminum Welding","Plasma Cutting","Metal Fabrication","On-Site Welding"],"foundingDate":"1999"}</script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -356,9 +356,9 @@ window.WELDEL_DATA = /*WELDEL_DATA_START*/{"hero":{"badge":"27 YEARS INDUSTRIAL 
 // 2. Add Email Service → choose Gmail → connect scruffy-22@hotmail.com
 // 3. Create Email Template — use variables: {{from_name}}, {{from_email}}, {{phone}}, {{service}}, {{message}}
 // 4. Replace the three IDs below with your real ones
-const EMAILJS_PUBLIC_KEY  = 'LC9ltkna365YqIH1iç';
+const EMAILJS_PUBLIC_KEY  = 'LC9ltkna365YqIH1i';
 const EMAILJS_SERVICE_ID  = 'service_bi075e7';
-const EMAILJS_TEMPLATE_ID = 'service_bi075e7';
+const EMAILJS_TEMPLATE_ID = 'template_veoulsu';
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // ── CAROUSEL ───────────────────────────────────────────────────────────────
@@ -565,39 +565,42 @@ if(navToggle&&navMenu){
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navMenu.classList.contains('is-open')){navMenu.classList.remove('is-open');navToggle.setAttribute('aria-expanded','false');document.body.style.overflow='';navToggle.focus();}});
 }
 
-// ── Spark Physics ──────────────────────────────────────────────────────────
+// ── Spark Physics (O(1) Pool) ──────────────────────────────────────────────
 const canvas=document.getElementById('sparkCanvas'),ctx=canvas.getContext('2d');
 canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-class V{constructor(x,y){this.x=x||0;this.y=y||0}add(v){return new V(this.x+v.x,this.y+v.y)}multiply(s){return new V(this.x*s,this.y*s)}}
-const G=new V(0,.4);let particles=[];
+const POOL_SIZE=300; let pIdx=0;
 class P{
-    constructor(pos,exp=false,mouse=false){
-        this.pos=pos;this.mass=Math.random()*2+.5;this.size=this.mass*1.5;
-        let vx,vy;
-        if(mouse){vx=(Math.random()-.5)*8;vy=Math.random()*5;}
-        else if(exp){vx=(Math.random()-.5)*20;vy=(Math.random()*-15)-5;}
-        else{vx=(Math.random()-.5)*5;vy=Math.random()*5;}
-        this.vel=new V(vx,vy);this.acc=new V(0,0);
-        this.prev=new V(pos.x,pos.y);
-        this.life=40+Math.random()*60;this.maxLife=this.life;
+    constructor(){this.active=false;this.x=0;this.y=0;this.vx=0;this.vy=0;this.px=0;this.py=0;this.mass=0;this.size=0;this.life=0;this.maxLife=0;this.color='';this.rest=.4;}
+    init(x,y,exp=false,mouse=false){
+        this.active=true; this.x=x; this.y=y; this.px=x; this.py=y;
+        this.mass=Math.random()*2+.5; this.size=this.mass*1.5;
+        if(mouse){this.vx=(Math.random()-.5)*8;this.vy=Math.random()*5;}
+        else if(exp){this.vx=(Math.random()-.5)*20;this.vy=(Math.random()*-15)-5;}
+        else{this.vx=(Math.random()-.5)*5;this.vy=Math.random()*5;}
+        this.life=40+Math.random()*60; this.maxLife=this.life;
         this.color=['#ffffff','#ffea00','#ff8c00'][Math.floor(Math.random()*3)];
-        this.rest=.4;
     }
     update(){
-        let f=G.multiply(this.mass).add(this.vel.multiply(-.05*this.size)).add(new V(Math.sin(Date.now()/1500)*.2,0));
-        this.acc=f.multiply(1/this.mass);this.prev.x=this.pos.x;this.prev.y=this.pos.y;
-        this.vel=this.vel.add(this.acc);this.pos=this.pos.add(this.vel);this.life--;
-        if(this.pos.y>canvas.height){this.pos.y=canvas.height;this.vel.y*=-this.rest;this.vel.x*=.9;}
-        if(this.pos.x<0||this.pos.x>canvas.width)this.vel.x*=-1;
+        if(!this.active)return;
+        let ax=(-this.vx*.05*this.size+Math.sin(Date.now()/1500)*.2)/this.mass;
+        let ay=(.4*this.mass-this.vy*.05*this.size)/this.mass;
+        this.px=this.x; this.py=this.y;
+        this.vx+=ax; this.vy+=ay; this.x+=this.vx; this.y+=this.vy; this.life--;
+        if(this.y>canvas.height){this.y=canvas.height;this.vy*=-this.rest;this.vx*=.9;}
+        if(this.x<0||this.x>canvas.width)this.vx*=-1;
+        if(this.life<=0)this.active=false;
     }
     draw(){
-        const a=this.life/this.maxLife;ctx.save();ctx.globalAlpha=a*.9;ctx.strokeStyle=this.color;ctx.lineWidth=this.size*.8;ctx.lineCap='round';ctx.shadowBlur=6;ctx.shadowColor=this.color;ctx.beginPath();ctx.moveTo(this.prev.x,this.prev.y);ctx.lineTo(this.pos.x,this.pos.y);ctx.stroke();ctx.restore();
+        if(!this.active)return;
+        ctx.save();ctx.globalAlpha=(this.life/this.maxLife)*.9;ctx.strokeStyle=this.color;ctx.lineWidth=this.size*.8;ctx.lineCap='round';ctx.shadowBlur=6;ctx.shadowColor=this.color;ctx.beginPath();ctx.moveTo(this.px,this.py);ctx.lineTo(this.x,this.y);ctx.stroke();ctx.restore();
     }
-    isDead(){return this.life<=0;}
 }
-document.addEventListener('mousemove',e=>{if(Math.random()<.15)particles.push(new P(new V(e.clientX,e.clientY),false,true));});
-document.addEventListener('click',e=>{for(let i=0;i<20;i++)particles.push(new P(new V(e.clientX,e.clientY),true));});
-function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);particles=particles.filter(p=>!p.isDead());if(particles.length>300)particles.splice(0,particles.length-300);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(anim);}
+const pool=Array.from({length:POOL_SIZE},()=>new P());
+function spawn(x,y,exp,mouse){pool[pIdx].init(x,y,exp,mouse);pIdx=(pIdx+1)%POOL_SIZE;}
+let lastM=0;
+document.addEventListener('mousemove',e=>{let n=Date.now();if(n-lastM>30){if(Math.random()<.5)spawn(e.clientX,e.clientY,false,true);lastM=n;}});
+document.addEventListener('click',e=>{for(let i=0;i<20;i++)spawn(e.clientX,e.clientY,true);});
+function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<POOL_SIZE;i++){pool[i].update();pool[i].draw();}requestAnimationFrame(anim);}
 anim();
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
@@ -611,7 +614,7 @@ if(rigC&&rigI){
 // ── Form Spark Effects ─────────────────────────────────────────────────────
 const mCtx=document.createElement('canvas').getContext('2d');
 function caretX(el){const r=el.getBoundingClientRect(),s=window.getComputedStyle(el);mCtx.font=`${s.fontSize} ${s.fontFamily}`;const t=el.value.substring(0,el.selectionEnd||el.value.length).split('\n').pop(),tw=mCtx.measureText(t).width;return Math.min(r.left+parseFloat(s.paddingLeft)+tw+4,r.right-4);}
-function weldFx(el){if(!el)return;el.addEventListener('input',()=>{const cx=caretX(el),r=el.getBoundingClientRect(),lh=parseFloat(window.getComputedStyle(el).lineHeight)||20,lines=el.value.substring(0,el.selectionEnd||el.value.length).split('\n').length,cy=Math.min(r.top+parseFloat(window.getComputedStyle(el).paddingTop)+(lines-1)*lh+lh/2,r.bottom-4);for(let i=0;i<8;i++){const p=new P(new V(cx,cy),true);p.vel.x=(Math.random()-.5)*14;p.vel.y=(Math.random()*-12)-3;p.life=30+Math.random()*40;p.maxLife=p.life;p.color=['#fff','#ffea00','#ff8c00'][Math.floor(Math.random()*3)];particles.push(p);}});}
+function weldFx(el){if(!el)return;el.addEventListener('input',()=>{const cx=caretX(el),r=el.getBoundingClientRect(),lh=parseFloat(window.getComputedStyle(el).lineHeight)||20,lines=el.value.substring(0,el.selectionEnd||el.value.length).split('\n').length,cy=Math.min(r.top+parseFloat(window.getComputedStyle(el).paddingTop)+(lines-1)*lh+lh/2,r.bottom-4);for(let i=0;i<8;i++){spawn(cx,cy,true,false);pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vx=(Math.random()-.5)*14;pool[(pIdx-1+POOL_SIZE)%POOL_SIZE].vy=(Math.random()*-12)-3;}});}
 weldFx(document.getElementById('weld-name'));
 weldFx(document.getElementById('weld-email'));
 weldFx(document.getElementById('weld-message'));
